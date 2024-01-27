@@ -12,7 +12,7 @@ import ActionAreaCard from './carouselCard';
 const data = [
   { id: 1, src: Backup, text: 'Power Backup', subtext: '24x7 power backup by 2KVA inverter for each floor.Use of generators also avialble in emergency' },
   { id: 2, src: Food,  text: 'Food', subtext: 'dinning service is also availbale' },
-  { id: 3, src: Furniture,  text: 'Furniture', subtext: 'we got you ciovered with all the furtinure for your stay' },
+  { id: 3, src: Furniture,  text: 'Furniture', subtext: 'we got you covered with all the furtinure for your stay' },
   { id: 4, src: Wifi, text: 'Wifi',  subtext: '400Mpbs super fast internet connectivity' },
   { id: 5, src: SingleDouble,  text: 'Logging', subtext: 'Single and Double sharing rooms availble' },
   { id: 6, src: Washroom,  text: 'Washroom', subtext: 'Attched hygeninc washroom in every room' },
@@ -23,16 +23,16 @@ const CarouselComponent = () => {
     desktop: {
       breakpoint: { max: 3000, min: 1024 },
       items: 5,
-      slidesToSlide: 5, // optional, default to 1.
+      slidesToSlide: 1, // optional, default to 1.
     },
     tablet: {
       breakpoint: { max: 1024, min: 464 },
       items: 3,
-      slidesToSlide: 3, // optional, default to 1.
+      slidesToSlide: 1, // optional, default to 1.
     },
     mobile: {
       breakpoint: { max: 464, min: 0 },
-      items: 2,
+      items: 1,
       slidesToSlide: 1, // optional, default to 1.
     },
   };

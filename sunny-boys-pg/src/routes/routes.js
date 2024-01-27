@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
-import App from '../App';
 import Home from "../pages/home/home";
+import Signup from "../pages/account/signUp";
+import RegistrationForm from "../pages/account/userDetails";
 const router = createBrowserRouter([
     {
         path: "/",
@@ -10,5 +11,9 @@ const router = createBrowserRouter([
         path: "/home",
         element: <Home />,
     },
+    {
+        path:'/signUp',
+        element:<RegistrationForm/>
+    }
 ]);
 export default router;
