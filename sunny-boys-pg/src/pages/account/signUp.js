@@ -1,5 +1,3 @@
-// Signup.js
-
 import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -9,9 +7,13 @@ import PhoneIcon from '@mui/icons-material/Phone';
 import EmailIcon from '@mui/icons-material/Email';
 import LockIcon from '@mui/icons-material/Lock';
 import { RecaptchaVerifier, signInWithPhoneNumber, createUserWithEmailAndPassword } from '@firebase/auth';
-import { firebaseAuth } from '../../services/firebase';
+import { firebaseAuth } from '../../firebase';
+import { useNavigate } from 'react-router-dom';
+import { useAppStore } from '../../store';
 
 const Signup = () => {
+  const setUser = useAppStore(state => state.setUser);
+  const user = useAppStore(state => state.user);
   const [userInfo, setUserInfo] = useState({
     name: '',
     mobile: '',
@@ -29,19 +31,19 @@ const Signup = () => {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [otpError, setOtpError] = useState('');
-
+  const [emailUid, setEmailUid] = useState(null);
+  const [mobileUid, setMobileUid] = useState(null);
   const isNameValid = /^[A-Za-z ]+$/.test(userInfo.name) && userInfo.name.length <= 80;
   const isMobileValid = /^\d{10}$/.test(userInfo.mobile);
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userInfo.email);
   const isPasswordValid = userInfo.password.length >= 6;
   const isOtpValid = /^\d{6}$/.test(otp);
-
+  const navigate = useNavigate();
   const handleUserInfoChange = (field, value) => {
     setUserInfo((prevUserInfo) => ({
       ...prevUserInfo,
       [field]: value,
     }));
-    // Reset error for the changed field
     switch (field) {
       case 'name':
         setNameError('');
@@ -66,7 +68,8 @@ const Signup = () => {
   };
 
   const handleSendOtp = async () => {
-    const appVerifier = new RecaptchaVerifier(firebaseAuth, "recapcha", {})
+    const appVerifier = new RecaptchaVerifier(firebaseAuth, "recapcha", { size: "invisible" })
+
     try {
       const confirmationResult = await signInWithPhoneNumber(firebaseAuth, `+91${userInfo.mobile}`, appVerifier)
       setOtpConfirmation(confirmationResult);
@@ -78,8 +81,10 @@ const Signup = () => {
 
   const handleVerifyOtp = async () => {
     try {
-      await otpConfirmation.confirm(otp);
+      const otpResult = await otpConfirmation.confirm(otp);
+      setMobileUid(otpResult.user.uid)
       setOtpVerified(true);
+      setUser({ ...user, mobileUid: otpResult.user.uid })
     } catch (error) {
       console.error('Error verifying OTP:', error);
       setOtpError('Invalid OTP');
@@ -117,7 +122,8 @@ const Signup = () => {
       createUserWithEmailAndPassword(firebaseAuth, userInfo.email, userInfo.password)
         .then((userCredential) => {
           const user = userCredential.user;
-          console.log(user);
+          setEmailUid(userCredential.user.uid)
+          navigate('/register', { state: { emailUid: user.uid, mobileUid, ...userInfo } })
         })
         .catch((error) => {
           console.log(error);
@@ -230,7 +236,7 @@ const Signup = () => {
             </>
           )}
 
-          <div id="recapcha"></div>
+          {!isOtpSent && <div id="recapcha" style={{display:'none'}}></div>}
           {!isOtpSent && !otpVerified && (
             <Button
               variant="contained"

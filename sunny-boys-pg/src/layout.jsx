@@ -7,7 +7,7 @@ const Layout = ({ children }) => {
   const handleSidebarClose = () => setSidebarOpen(false);
 
   return (
-    <div >
+    <div>
       <TopAppBar onMenuIconClick={handleMenuIconClick} isSidebarOpen={isSidebarOpen} />
       <div>
         <SideBar isOpen={isSidebarOpen} onClose={handleSidebarClose} />
