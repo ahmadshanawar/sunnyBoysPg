@@ -7,7 +7,7 @@ const TopAppBar = ({ onMenuIconClick, isSidebarOpen }) => {
   return (
     <AppBar
       position="fixed"
-      sx={{
+      sx={{        
         backgroundColor: '#251a33',
         zIndex: 1100,
         transition: (theme) => theme.transitions.create(['width', 'margin'], {
@@ -38,10 +38,7 @@ const TopAppBar = ({ onMenuIconClick, isSidebarOpen }) => {
         <Box>
           <Link to="/home" style={{ textDecoration: 'none', color: 'inherit', marginRight: '6px' }}>
             <Typography sx={{ marginRight: '10px', letterSpacing: '1px', fontSize: '16px' }} variant="button">Home</Typography>
-          </Link>
-          <Link to="/about" style={{ textDecoration: 'none', color: 'inherit', marginRight: '6px' }}>
-            <Typography sx={{ marginRight: '10px', letterSpacing: '1px', fontSize: '16px' }} variant="button">About</Typography>
-          </Link>
+          </Link>         
           <Link to="/login" style={{ textDecoration: 'none', color: 'inherit' }}>
             <Typography sx={{ marginRight: '10px', letterSpacing: '1px', fontSize: '16px' }} variant="button">Login</Typography>
           </Link>
