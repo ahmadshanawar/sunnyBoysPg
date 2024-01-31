@@ -9,17 +9,19 @@ import {
   TextField,
   InputAdornment,
   CardContent,
+  Divider,
+  Alert,
 } from '@mui/material';
 import { useAppStore } from '../../../store';
 import { firebaseStorage } from '../../../firebase';
 import { ref, uploadBytesResumable } from "@firebase/storage";
 import CloudUploadIcon from '@mui/icons-material/CloudUploadTwoTone';
-import  imageCompression  from 'browser-image-compression';
+import imageCompression from 'browser-image-compression';
 
-const FileCard = ({ type, file, progress }) => (
+const FileCard = ({ type, file, progress , uploadError}) => (
   <Grid item xs={12} sm={4}>
     <Card sx={{ maxWidth: 210, maxHeight: 140 }}>
-      {progress > 0 && <LinearProgress color="success" variant="determinate" value={progress} />}
+      {progress > 0 && <LinearProgress color={uploadError?.value ? "error":"success"} variant="determinate" value={progress} sx={{ minHeight: 14, borderRadius:'5px', margin:1 }} />}
       <CardContent>
         {file && (
           <div>
@@ -62,6 +64,9 @@ const FileUploadField = ({ label, id, type, file, handleInputChange }) => (
 const MultiFileUpload = () => {
   const userData = useAppStore((state) => state.user);
   const setUserData = useAppStore((state) => state.setUser);
+  const [uploadError, setUploadError] = useState({ value: false, message: '' })
+  const [compressionError, setCompressionError] = useState({ value: false, message: '' })
+
   const [files, setFiles] = useState({
     adhaarFront: null,
     adhaarBack: null,
@@ -83,14 +88,15 @@ const MultiFileUpload = () => {
     let compressedFile;
     const storageRef = ref(firebaseStorage, `${userData.emailUid}/${type}_${file.name}`);
     try {
-      if (!file) {
-        console.log('No file selected');
+      if (!file || !file.type.startsWith('image/')) {
+        setUploadError({ value: true, message: 'Invalid file selected. Please choose an image file' })
         return;
       }
       try {
+        setUploadError({value:false, message:''})
         compressedFile = await imageCompression(file, compresionOptions);
       } catch (err) {
-        console.log(err);
+        setCompressionError({ value: true, message: err.message })
       }
       const uploadTask = uploadBytesResumable(storageRef, compressedFile);
 
@@ -105,48 +111,59 @@ const MultiFileUpload = () => {
 
         console.log(`File ${file.name} uploaded successfully!`);
       }, (error) => {
-        console.log(error);
+
+        setUploadError({ value: true, message: error.message });
         setUploadProgress((prevProgress) => ({ ...prevProgress, [type]: 0 }));
       });
 
     } catch (e) {
-      console.log(e);
+      setUploadError({ value: true, message: e.message });
       setUploadProgress((prevProgress) => ({ ...prevProgress, [type]: 0 }));
     }
   };
 
   return (
     <>
+
       <Typography variant="h6" gutterBottom style={{ marginBottom: '20px' }}>
         Upload ID Photos
       </Typography>
-      <Box>
-        <Grid container spacing={3}>
-          {Object.entries(files).map(([type, file]) => (
-            <FileUploadField
-              key={type}
-              label={`${type.charAt(0).toUpperCase() + type.slice(1)} Photo`}
-              id={`${type}Input`}
-              type={type}
-              file={file}
-              handleInputChange={handleInputChange}
-            />
-          ))}
-        </Grid>
-        <Grid container spacing={3} sx={{ marginTop: '5px' }}>
-          {Object.entries(files).map(([type, file]) => (
-            <FileCard
-              key={type}
-              type={type}
-              file={file}
-              progress={uploadProgress[type]}
-              handleInputChange={handleInputChange}
-            />
-          ))}
-        </Grid>
-      </Box>
-    </>
-  );
+      <Divider sx={{ marginBottom: 3, borderWidth: 2, backgroundColor: 'lightBlue' }} />
+      <Box sx={{mb:2}}>
+        {(uploadError.message || compressionError.message) &&
+          <Alert severity="error">
+            {uploadError.message} {compressionError.message}
+          </Alert>
+        }
+        </Box>
+        <Box>
+          <Grid container spacing={3}>
+            {Object.entries(files).map(([type, file]) => (
+              <FileUploadField
+                key={type}
+                label={`${type.charAt(0).toUpperCase() + type.slice(1)}`}
+                id={`${type}Input`}
+                type={type}
+                file={file}
+                handleInputChange={handleInputChange}
+              />
+            ))}
+          </Grid>
+          <Grid container spacing={3} sx={{ marginTop: '5px' }}>
+            {Object.entries(files).map(([type, file]) => (
+              <FileCard
+                key={type}
+                type={type}
+                file={file}
+                progress={uploadProgress[type]}
+                handleInputChange={handleInputChange}
+                uploadError={uploadError}
+              />
+            ))}
+          </Grid>
+        </Box>
+      </>
+      );
 };
 
-export default MultiFileUpload;
+      export default MultiFileUpload;

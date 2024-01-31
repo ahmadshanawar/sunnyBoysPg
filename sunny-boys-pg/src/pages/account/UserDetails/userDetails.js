@@ -11,14 +11,14 @@ import {
   Paper,
   Typography,
   Box,
-  Card,
-  CardContent
+  Divider
 } from '@mui/material';
-import { firebaseDb } from '../../firebase';
+import { firebaseDb } from '../../../firebase';
 import { doc, setDoc } from "@firebase/firestore";
 import { useNavigate, useLocation } from 'react-router-dom';
-import MultiFileUpload from './UserDetails/multiFileUpload';
-import { useAppStore } from '../../store';
+import MultiFileUpload from './multiFileUpload';
+import { useAppStore } from '../../../store';
+var validator = require('aadhaar-validator');
 
 const RegistrationForm = () => {
   const { state } = useLocation()
@@ -56,8 +56,9 @@ const RegistrationForm = () => {
   };
 
   const validateAdhaarNumber = (value) => {
-    const isValid = /^\d{12}$/.test(value);
-    return isValid ? '' : 'Adhaar number must be a 12-digit number';
+    const isValid = /^\d{12}$/.test(value) 
+    //&& validator.isValidNumber(value);
+    return isValid ? '' : 'Adhaar number must be a Valid 12-digit number';
   };
 
   const handleInputChange = (field, value) => {
@@ -107,16 +108,16 @@ const RegistrationForm = () => {
   const isFormValid = () => {
     return Object.values(userData).every((value) => value !== '') &&
       Object.values(validationErrors).every((error) => error === '') &&
-      userData.collegeIdPhoto !== null &&
-      userData.adhaarFront !== null &&
-      userData.adhaarBack !== null;
+      userData.collegeIdPhotoFileName !== null &&
+      userData.adhaarFrontFileName !== null &&
+      userData.adhaarBackFileName !== null;
   };
 
   const handleSubmit = async () => {
     if (isFormValid()) {
       try {
-        await setDoc(doc(firebaseDb, "Users", state.emailUid), { ...userData, ...state });
-        navigate('/profile', state.emailUid)
+        await setDoc(doc(firebaseDb, "Users", userData.emailUid), { ...userData, ...state });
+        navigate('/profile')
       }
       catch (err) {
         console.log(err)
@@ -130,9 +131,10 @@ const RegistrationForm = () => {
     <Grid container justifyContent="center" alignItems="center" style={{ minHeight: '100vh' }}>
       <Grid item xs={12} sm={8} md={6} lg={4}>
         <Paper elevation={3} style={{ padding: '20px', margin: '20px' }}>
-          <Typography variant="h5" gutterBottom style={{ marginBottom: '20px' }}>
+          <Typography variant="h5" gutterBottom>
             Tennant Registration Form
           </Typography>
+          <Divider sx={{ marginBottom: 2, borderWidth: 2, backgroundColor: 'lightBlue' }} />
           <Grid container spacing={2}>
             {/* House Number and Lane/Street */}
             <Grid item xs={3}>
@@ -245,6 +247,7 @@ const RegistrationForm = () => {
           <Typography variant="h6" gutterBottom>
             Date Selector
           </Typography>
+          <Divider sx={{ marginBottom: 3, borderWidth: 2, backgroundColor: 'lightBlue' }} />
           <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
             <TextField
               fullWidth

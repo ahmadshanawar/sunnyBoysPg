@@ -6,7 +6,7 @@ const AddressDetails = () => {
 
 
   return (
-    <Paper elevation={3} sx={{ padding: 2, borderRadius: '20px', marginBottom: '20px' }}>
+    <Paper elevation={3} sx={{ padding: 2, borderRadius: '20px', marginBottom: '20px', minHeight:315 }}>
       <Typography variant="h1" sx={{ fontSize: '18px', fontWeight: 'bold', margin: '10px' }}>Address Details</Typography>
       <Divider light sx={{ marginBottom: '10px' }} />
       <Grid container spacing={2}>
@@ -52,7 +52,7 @@ const AddressDetails = () => {
       // onChange={(e) => setPassword(e.target.value)}
       />
       <Grid container spacing={2}>
-        <Grid item xs={12} sm={5} >
+        <Grid item xs={12} sm={4.5} >
           <TextField
             variant="filled"
             type="text"
@@ -66,7 +66,7 @@ const AddressDetails = () => {
           // onChange={(e) => setPassword(e.target.value)}
           />
         </Grid>
-        <Grid item xs={12} sm={5}>
+        <Grid item xs={12} sm={4.5}>
           <TextField
             variant="filled"
             type="text"
@@ -80,7 +80,7 @@ const AddressDetails = () => {
           // onChange={(e) => setPassword(e.target.value)}
           />
         </Grid>
-        <Grid item xs={12} sm={2}>
+        <Grid item xs={12} sm={3}>
           <TextField
             variant="filled"
             type="text"
