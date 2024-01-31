@@ -11,7 +11,7 @@ import {
 import { signInWithEmailAndPassword, setPersistence, browserSessionPersistence } from '@firebase/auth';
 import { firebaseAuth } from '../../firebase';
 import { useNavigate } from 'react-router-dom';
-
+import { useAppStore } from '../../store';
 const CenteredContainer = styled(Container)({
   display: 'flex',
   justifyContent: 'center',
@@ -36,26 +36,22 @@ const SubmitButton = styled(Button)({
 });
 
 const Login = () => {
+  const setUser = useAppStore((state) => state.setUser);
+  const user = useAppStore((state) => state.user);
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const navigate= useNavigate();
+  const navigate = useNavigate();
   const handleLogin = async () => {
     if (isEmail(userId)) {
       console.log('Login with email:', userId);
       setPersistence(firebaseAuth, browserSessionPersistence)
         .then(async () => {
-          // Existing and future Auth states are now persisted in the current
-          // session only. Closing the window would clear any existing state even
-          // if a user forgets to sign out.
-          // ...
-          // New sign-in will be persisted with session persistence.
           try {
             const userCredential = await signInWithEmailAndPassword(firebaseAuth, userId, password);
-            // Signed in 
-            const user = userCredential.user;
-            console.log(user.uid);
-            navigate('/profile', {state:{ uid:user.uid}})
+            const userCred = userCredential.user;
+            setUser({ ...user, emailUid: userCred.uid })
+            navigate('/profile')
 
           } catch (error) {
             const errorCode = error.code;
@@ -119,12 +115,28 @@ const Login = () => {
           {/* Add a similar TextField for password or mobile, depending on your authentication method */}
           <SubmitButton
             variant="contained"
-            color="primary"
+            sx={{backgroundColor:'#251a33', marginTop:'5px'}}
             fullWidth
             onClick={handleLogin}
           >
             Login
-          </SubmitButton>
+          </SubmitButton>          
+          <Button
+            variant="contained"
+            sx={{backgroundColor:'#251a33', marginTop:'5px'}}
+            fullWidth
+            onClick={() => navigate('/signUp') }
+          >
+            Register
+          </Button>
+          <Button
+            variant="contained"
+           sx={{backgroundColor:'#251a33', marginTop:'5px'}}
+            fullWidth
+            onClick={() => navigate('/') }
+          >
+            Home
+          </Button>
         </LoginForm>
       </CenteredPaper>
     </CenteredContainer>

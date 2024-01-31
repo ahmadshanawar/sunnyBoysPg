@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import { Container, Box, Typography } from '@mui/material';
+import { Container, Box, Typography, CircularProgress } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import PhoneIcon from '@mui/icons-material/Phone';
 import EmailIcon from '@mui/icons-material/Email';
 import LockIcon from '@mui/icons-material/Lock';
 import { RecaptchaVerifier, signInWithPhoneNumber, createUserWithEmailAndPassword } from '@firebase/auth';
-import { firebaseAuth } from '../../firebase';
+import { firebaseAuth } from '../../../firebase';
 import { useNavigate } from 'react-router-dom';
-import { useAppStore } from '../../store';
+import { useAppStore } from '../../../store';
+import ClosableAlert from '../../../common/closableAlert';
+import { initialState } from '../../../store';
 
 const Signup = () => {
   const setUser = useAppStore(state => state.setUser);
@@ -25,7 +27,7 @@ const Signup = () => {
   const [otp, setOtp] = useState('');
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [otpVerified, setOtpVerified] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(false);
   const [nameError, setNameError] = useState('');
   const [mobileError, setMobileError] = useState('');
   const [emailError, setEmailError] = useState('');
@@ -33,12 +35,14 @@ const Signup = () => {
   const [otpError, setOtpError] = useState('');
   const [emailUid, setEmailUid] = useState(null);
   const [mobileUid, setMobileUid] = useState(null);
+  const [error, setError] = useState('')
   const isNameValid = /^[A-Za-z ]+$/.test(userInfo.name) && userInfo.name.length <= 80;
   const isMobileValid = /^\d{10}$/.test(userInfo.mobile);
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userInfo.email);
   const isPasswordValid = userInfo.password.length >= 6;
   const isOtpValid = /^\d{6}$/.test(otp);
   const navigate = useNavigate();
+
   const handleUserInfoChange = (field, value) => {
     setUserInfo((prevUserInfo) => ({
       ...prevUserInfo,
@@ -60,6 +64,8 @@ const Signup = () => {
       default:
         break;
     }
+
+    setUser({ ...user, [field]: value })
   };
 
   const handleOtpChange = (value) => {
@@ -67,28 +73,45 @@ const Signup = () => {
     setOtpError('');
   };
 
+
   const handleSendOtp = async () => {
     const appVerifier = new RecaptchaVerifier(firebaseAuth, "recapcha", { size: "invisible" })
-
-    try {
-      const confirmationResult = await signInWithPhoneNumber(firebaseAuth, `+91${userInfo.mobile}`, appVerifier)
-      setOtpConfirmation(confirmationResult);
-      setIsOtpSent(true);
-    } catch (error) {
-      console.error('Error sending OTP:', error);
+    setIsLoading(false);
+    if (userInfo?.mobile) {
+      setIsLoading(true)
+      try {
+        const confirmationResult = await signInWithPhoneNumber(firebaseAuth, `+91${userInfo.mobile}`, appVerifier)
+        setOtpConfirmation(confirmationResult);
+        setIsOtpSent(true);
+        setIsLoading(false);
+      } catch (error) {
+        setIsLoading(false);
+        setError(error.message)
+      }
     }
   };
 
   const handleVerifyOtp = async () => {
+    setIsLoading(true)
     try {
       const otpResult = await otpConfirmation.confirm(otp);
       setMobileUid(otpResult.user.uid)
       setOtpVerified(true);
-      setUser({ ...user, mobileUid: otpResult.user.uid })
+      setUser({
+        ...user,
+        status: 'Awaiting Approval',
+        role: 'READ',
+        occupancyType: 'double',
+        finalizedRent: '2500',
+        mobileUid: otpResult.user.uid,
+        mobile: otpResult.user.phoneNumber
+      })
+      setIsLoading(false)
     } catch (error) {
-      console.error('Error verifying OTP:', error);
+      setError(error.message)
       setOtpError('Invalid OTP');
       setOtpVerified(false);
+      setIsLoading(false)
     }
   };
 
@@ -119,14 +142,18 @@ const Signup = () => {
     }
 
     if (otpVerified) {
+      setIsLoading(true)
       createUserWithEmailAndPassword(firebaseAuth, userInfo.email, userInfo.password)
         .then((userCredential) => {
-          const user = userCredential.user;
+          const current_user = userCredential.user;
           setEmailUid(userCredential.user.uid)
-          navigate('/register', { state: { emailUid: user.uid, mobileUid, ...userInfo } })
+          setUser({ ...user, email: userCredential.user.email })
+          navigate('/register', { state: { emailUid: current_user.uid, mobileUid, ...userInfo } })
+          setIsLoading(false)
         })
         .catch((error) => {
-          console.log(error);
+          setIsLoading(false)
+          setError(error.message)
         });
     }
   };
@@ -156,6 +183,9 @@ const Signup = () => {
             textAlign: 'center',
           }}
         >
+          {isOtpSent && <ClosableAlert message="Otp has been sent to your mobile number" severity="success" />}
+          {otpVerified && <ClosableAlert message="Otp Verified Click Sign Up" severity="success" />}
+          {error && <ClosableAlert message={error} severity="error" />}
           <Typography variant="h4" gutterBottom>
             Sign Up
           </Typography>
@@ -231,12 +261,10 @@ const Signup = () => {
                 sx={{ marginTop: '10px', marginBottom: '10px' }}
                 disabled={!otp}
               >
-                Verify OTP
+                Verify OTP {isLoading && <CircularProgress size={20} thickness={8} sx={{ marginLeft: 2, color: 'white' }} />}
               </Button>
             </>
           )}
-
-          {!isOtpSent && <div id="recapcha" style={{display:'none'}}></div>}
           {!isOtpSent && !otpVerified && (
             <Button
               variant="contained"
@@ -245,7 +273,7 @@ const Signup = () => {
               sx={{ marginTop: '10px' }}
               disabled={!isMobileValid || !isEmailValid || !isPasswordValid}
             >
-              Send OTP
+              Send OTP {isLoading && <CircularProgress size={20} thickness={8} sx={{ marginLeft: 2, color: 'white' }} />}
             </Button>
           )}
 
@@ -257,11 +285,12 @@ const Signup = () => {
               sx={{ marginTop: '10px' }}
               disabled={isSignupDisabled}
             >
-              Next
+              Sign Up {isLoading && <CircularProgress size={20} thickness={8} sx={{ marginLeft: 2, color: 'white' }} />}
             </Button>
           )}
         </Box>
       </Box>
+      <div id="recapcha" style={{ display: 'none' }}></div>
     </Container>
   );
 };

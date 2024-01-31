@@ -28,7 +28,7 @@ const Home = () => {
             endIcon={<OutboundIcon style={{ fontSize: '30' }} />}
             style={{ fontSize: 22, backgroundColor: '#251a33' }}
           >
-            Book Now !
+          Want to Stay?
           </Button>
         </Box>
       </Box>

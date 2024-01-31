@@ -1,10 +1,11 @@
 import { createBrowserRouter } from "react-router-dom";
 import Home from "../pages/home/home";
-import Signup from "../pages/account/signUp";
-import RegistrationForm from "../pages/account/userDetails";
+import Signup from "../pages/account/UserDetails/signUp";
+import RegistrationForm from "../pages/account/UserDetails/userDetails";
 import Profile from "../pages/account/profile";
 import Login from "../pages/account/login";
 import Layout from "../layout";
+import Logout from "../pages/account/logout";
 const router = createBrowserRouter([
     {
         path: "/",
@@ -30,7 +31,13 @@ const router = createBrowserRouter([
     },
     {
         path: '/login',
-        element: <Login />
+        element: <Layout>
+            <Login />
+        </Layout>
+    },
+    {
+        path: '/logout',
+        element: <Logout />
     }
 ]);
 export default router;

@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-const initialState = {
+export const initialState = {
   adhaarNumber: '',
   checkInDate: '',
   checkOutDate: '',
@@ -20,17 +20,19 @@ const initialState = {
   parentName: '',
   password: '',
   pinCode: '',
-  status: 'awaiting Approval',
-  role: '',
-  occupancyType: '',
-  finalizedRent: '',
-  payments: [],
+  status: 'Awaiting Approval',
+  role: 'READ',
+  occupancyType: 'double',
+  finalizedRent: '2500',
   adhaarFrontFileName: '',
   adhaarBackFileName: '',
-  alternateIdFileName: '',
-  profilePictureFileName: ''
+  collegeIdPhotoFileName:''
 }
 
+const resetUserToEmpty = () => {
+  const emptyUser = Object.fromEntries(Object.keys(initialState).map(key => [key, '']));
+  return emptyUser;
+};
 export const useAppStore = create(
   persist(
     (set) => ({
@@ -38,6 +40,7 @@ export const useAppStore = create(
       setUser: (value) => set((state) => ({ user: { ...state.user, ...value } })),
       isLoggedIn: false,
       setIsLoggedIn: (value) => set(() => ({ isLoggedIn: value })),
+      resetUser: () => set(() => ({ user: resetUserToEmpty() })),
     }),
     {
       name: 'sunny_pg', // name of the item in the storage (must be unique)

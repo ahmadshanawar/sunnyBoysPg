@@ -7,15 +7,15 @@ const Layout = ({ children }) => {
   const handleSidebarClose = () => setSidebarOpen(false);
 
   return (
-    <div>
+    <>
       <TopAppBar onMenuIconClick={handleMenuIconClick} isSidebarOpen={isSidebarOpen} />
       <div>
         <SideBar isOpen={isSidebarOpen} onClose={handleSidebarClose} />
-        <div style={{ marginLeft: isSidebarOpen ? '250px' : '0px', transition: 'margin 0.26s', marginTop: '30px' }}>
+        <div style={{ marginLeft: isSidebarOpen ? '250px' : '0px', transition: 'margin 0.26s', marginTop: '10px' }}>
           {children}
         </div>
       </div>
-    </div>
+    </>
   )
 }
 export default Layout

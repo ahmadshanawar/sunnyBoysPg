@@ -1,18 +1,26 @@
 import ListItemIcon from '@mui/material/ListItemIcon';
 import RoomIcon from '@mui/icons-material/Room';
 import PersonIcon from '@mui/icons-material/Person';
-import { Paper, Divider, Grid, Avatar, TextField, Box, Typography } from '@mui/material'
+import { Paper, Divider, Grid, Avatar, TextField, Button, Box, Typography } from '@mui/material'
 import { useAppStore } from '../../store';
 import { format, parseISO } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
 
 const BasicDetails = () => {
-  debugger;
+  const navigate = useNavigate()
   const user = useAppStore(state => state.user)
   return (
-    <Paper elevation={3} sx={{ padding: 2, borderRadius: '20px', marginBottom: '20px' }}>
+    <Paper elevation={3} sx={{ padding: 2, borderRadius: '20px', marginBottom: '20px', minHeight: 400 }}>
       <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
         <Typography variant="h1" sx={{ fontSize: '18px', fontWeight: 'bold', margin: '10px' }}>Basic Details</Typography>
-        <Typography variant="h1" sx={{ fontSize: '18px', fontWeight: 'bold', margin: '10px', color: 'red' }}>January Rent Pending : ₹2500</Typography>
+        <Button
+          sx={{ height: '30px', alignContent: 'center' }}
+          variant="contained"
+          color="primary"
+          onClick={() => navigate('/register')}
+        >
+          Edit
+        </Button>
       </Box>
       <Divider light sx={{ marginBottom: '20px' }} />
       <Box sx={{ display: 'flex', flexDirection: 'row' }}>
@@ -41,7 +49,7 @@ const BasicDetails = () => {
             <ListItemIcon style={{ minWidth: '20px' }} >
               <PersonIcon fontSize="inherit" />
             </ListItemIcon>
-            Single Sharing
+            {user.occupancyType.charAt(0).toUpperCase() + user.occupancyType.slice(1)} Sharing
           </Typography>
         </Box>
       </Box>
@@ -148,7 +156,7 @@ const BasicDetails = () => {
         </Grid>
       </Grid>
       <Grid container spacing={2}>
-        <Grid item xs={12} sm={5} >
+        <Grid item xs={12} sm={4} >
           <TextField
             variant="filled"
             type="text"
@@ -162,7 +170,7 @@ const BasicDetails = () => {
           // onChange={(e) => setPassword(e.target.value)}
           />
         </Grid>
-        <Grid item xs={12} sm={5}>
+        <Grid item xs={12} sm={4}>
           <TextField
             variant="filled"
             type="text"
@@ -176,7 +184,7 @@ const BasicDetails = () => {
           // onChange={(e) => setPassword(e.target.value)}
           />
         </Grid>
-        <Grid item xs={12} sm={2}>
+        <Grid item xs={12} sm={4}>
           <TextField
             variant="filled"
             type="text"
