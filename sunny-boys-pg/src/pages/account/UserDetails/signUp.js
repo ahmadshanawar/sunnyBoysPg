@@ -7,22 +7,15 @@ import PhoneIcon from '@mui/icons-material/Phone';
 import EmailIcon from '@mui/icons-material/Email';
 import LockIcon from '@mui/icons-material/Lock';
 import { RecaptchaVerifier, signInWithPhoneNumber, createUserWithEmailAndPassword } from '@firebase/auth';
-import { firebaseAuth } from '../../../firebase';
+import { firebaseAuth, firebaseDb } from '../../../firebase';
+import { setDoc, doc } from '@firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../../../store';
 import ClosableAlert from '../../../common/closableAlert';
-import { initialState } from '../../../store';
 
 const Signup = () => {
   const setUser = useAppStore(state => state.setUser);
   const user = useAppStore(state => state.user);
-  const [userInfo, setUserInfo] = useState({
-    name: '',
-    mobile: '',
-    email: '',
-    password: '',
-  });
-
   const [otpConfirmation, setOtpConfirmation] = useState(null);
   const [otp, setOtp] = useState('');
   const [isOtpSent, setIsOtpSent] = useState(false);
@@ -33,21 +26,19 @@ const Signup = () => {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [otpError, setOtpError] = useState('');
-  const [emailUid, setEmailUid] = useState(null);
-  const [mobileUid, setMobileUid] = useState(null);
   const [error, setError] = useState('')
-  const isNameValid = /^[A-Za-z ]+$/.test(userInfo.name) && userInfo.name.length <= 80;
-  const isMobileValid = /^\d{10}$/.test(userInfo.mobile);
-  const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userInfo.email);
-  const isPasswordValid = userInfo.password.length >= 6;
+
+  const isNameValid = /^[A-Za-z ]+$/.test(user.name) && user.name.length <= 80;
+  const isMobileValid = /^\d{10}$/.test(user?.mobile?.replace("+91", ""));
+  const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(user.email);
+  const isPasswordValid = user.password.length >= 6;
   const isOtpValid = /^\d{6}$/.test(otp);
+
   const navigate = useNavigate();
 
   const handleUserInfoChange = (field, value) => {
-    setUserInfo((prevUserInfo) => ({
-      ...prevUserInfo,
-      [field]: value,
-    }));
+    setUser((prevUserInfo) => ({ ...prevUserInfo, [field]: value, }));
+
     switch (field) {
       case 'name':
         setNameError('');
@@ -64,7 +55,6 @@ const Signup = () => {
       default:
         break;
     }
-
     setUser({ ...user, [field]: value })
   };
 
@@ -77,10 +67,10 @@ const Signup = () => {
   const handleSendOtp = async () => {
     const appVerifier = new RecaptchaVerifier(firebaseAuth, "recapcha", { size: "invisible" })
     setIsLoading(false);
-    if (userInfo?.mobile) {
+    if (user?.mobile) {
       setIsLoading(true)
       try {
-        const confirmationResult = await signInWithPhoneNumber(firebaseAuth, `+91${userInfo.mobile}`, appVerifier)
+        const confirmationResult = await signInWithPhoneNumber(firebaseAuth, `+91${user.mobile}`, appVerifier)
         setOtpConfirmation(confirmationResult);
         setIsOtpSent(true);
         setIsLoading(false);
@@ -92,10 +82,10 @@ const Signup = () => {
   };
 
   const handleVerifyOtp = async () => {
+    debugger;
     setIsLoading(true)
     try {
       const otpResult = await otpConfirmation.confirm(otp);
-      setMobileUid(otpResult.user.uid)
       setOtpVerified(true);
       setUser({
         ...user,
@@ -140,21 +130,22 @@ const Signup = () => {
       setOtpError('Invalid OTP. Please enter a 6-digit OTP.');
       return;
     }
-
     if (otpVerified) {
-      setIsLoading(true)
-      createUserWithEmailAndPassword(firebaseAuth, userInfo.email, userInfo.password)
-        .then((userCredential) => {
-          const current_user = userCredential.user;
-          setEmailUid(userCredential.user.uid)
-          setUser({ ...user, email: userCredential.user.email })
-          navigate('/register', { state: { emailUid: current_user.uid, mobileUid, ...userInfo } })
-          setIsLoading(false)
-        })
-        .catch((error) => {
-          setIsLoading(false)
-          setError(error.message)
-        });
+      try {
+        setIsLoading(true);
+        debugger;
+        const userCredential = await createUserWithEmailAndPassword(firebaseAuth, user.email, user.password);
+        const current_user = userCredential.user;
+        await setDoc(doc(firebaseDb, "Users", current_user.uid), { ...user, emailUid: current_user.uid });
+        setUser({ ...user, emailUid: current_user.uid })
+        navigate('/register');
+        setIsLoading(false);
+
+      } catch (error) {
+        setIsLoading(false);
+        console.log(error)
+        setError(error.message);
+      }
     }
   };
 
@@ -194,7 +185,7 @@ const Signup = () => {
             variant="outlined"
             fullWidth
             margin="normal"
-            value={userInfo.name}
+            value={user.name}
             onChange={(e) => handleUserInfoChange('name', e.target.value)}
             error={!!nameError}
             helperText={nameError}
@@ -207,7 +198,7 @@ const Signup = () => {
             variant="outlined"
             fullWidth
             margin="normal"
-            value={userInfo.mobile}
+            value={user.mobile}
             onChange={(e) => handleUserInfoChange('mobile', e.target.value)}
             error={!!mobileError}
             helperText={mobileError}
@@ -220,7 +211,7 @@ const Signup = () => {
             variant="outlined"
             fullWidth
             margin="normal"
-            value={userInfo.email}
+            value={user.email}
             onChange={(e) => handleUserInfoChange('email', e.target.value)}
             error={!!emailError}
             helperText={emailError}
@@ -234,7 +225,7 @@ const Signup = () => {
             variant="outlined"
             fullWidth
             margin="normal"
-            value={userInfo.password}
+            value={user.password}
             onChange={(e) => handleUserInfoChange('password', e.target.value)}
             error={!!passwordError}
             helperText={passwordError}

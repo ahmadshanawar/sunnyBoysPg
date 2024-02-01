@@ -10,12 +10,13 @@ import {
   TableSortLabel,
   Stack,
   Divider,
-  Typography
+  Typography, 
+  Box
 } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import WarningIcon from '@mui/icons-material/Warning';
 import { format } from 'date-fns';
-
+import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 const PaymentDetails = () => {
   let paymentHistory = [
     { paymentDate: '', paymentAmount: 2500, dueDate: '2024-01-15', forMonth: 'January', status: 'Pending' },
@@ -55,7 +56,10 @@ const PaymentDetails = () => {
 
   return (
     <Paper elevation={3} sx={{ padding: 2, borderRadius: '20px', marginBottom: '20px', minHeight: 400 }}>
-      <Typography variant="h1" sx={{ fontSize: '18px', fontWeight: 'bold', margin: '10px' }}>Payment Details</Typography>
+      <Box sx={{ display: 'inline-flex' }}>
+        <CurrencyRupeeIcon sx={{ fontSize: 35, color: '#a597ad' }} />
+        <Typography variant="h1" sx={{ fontSize: '18px', fontWeight: 'bold', margin: '6px' }}>Payment Details</Typography>
+      </Box>
       <Divider light sx={{ marginBottom: '10px' }} />
       <TableContainer component={Paper} sx={{ maxHeight: 348 }}>
         <Table size="small">
@@ -113,8 +117,8 @@ const PaymentDetails = () => {
           <TableBody>
             {sortedPaymentHistory.map((payment, index) => (
               <TableRow key={index}>
-                <TableCell>{payment?.paymentDate && format(payment.paymentDate,'dd-mm-yyyy')}</TableCell>
-                <TableCell>{format(payment.dueDate,'dd-mm-yyyy')}</TableCell>
+                <TableCell>{payment?.paymentDate && format(payment.paymentDate, 'dd-mm-yyyy')}</TableCell>
+                <TableCell>{format(payment.dueDate, 'dd-mm-yyyy')}</TableCell>
                 <TableCell>{payment.forMonth}</TableCell>
                 <TableCell>{payment.paymentAmount}</TableCell>
 

@@ -10,6 +10,7 @@ import LoginIcon from '@mui/icons-material/Login';
 
 const TopAppBar = ({ onMenuIconClick, isSidebarOpen }) => {
   const isLoggedIn = useAppStore(state => state.isLoggedIn)
+  const user = useAppStore(state => state.user);
   return (
     <AppBar
       position="fixed"
@@ -48,7 +49,7 @@ const TopAppBar = ({ onMenuIconClick, isSidebarOpen }) => {
           </Link>
 
           {/* Account Link (visible only when logged in) */}
-          {isLoggedIn && (
+          {(isLoggedIn && user.isUserRegistered) && (
             <Link to="/profile" style={{ textDecoration: 'none', color: 'inherit', marginRight: '6px' }}>
               <Typography sx={{ marginRight: '10px', letterSpacing: '1px', fontSize: '16px', display: 'inline-flex' }} variant="button">
                 <AccountCircleIcon style={{ marginRight: '3px' }} /> Account

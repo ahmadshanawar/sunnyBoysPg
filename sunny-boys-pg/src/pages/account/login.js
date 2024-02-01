@@ -38,6 +38,8 @@ const SubmitButton = styled(Button)({
 const Login = () => {
   const setUser = useAppStore((state) => state.setUser);
   const user = useAppStore((state) => state.user);
+  const setIsLoggedIn = useAppStore((state) => state.setIsLoggedIn);
+
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -50,7 +52,8 @@ const Login = () => {
           try {
             const userCredential = await signInWithEmailAndPassword(firebaseAuth, userId, password);
             const userCred = userCredential.user;
-            setUser({ ...user, emailUid: userCred.uid })
+            setUser({ ...user, emailUid: userCred.uid });
+            setIsLoggedIn(true);
             navigate('/profile')
 
           } catch (error) {

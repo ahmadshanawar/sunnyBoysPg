@@ -9,11 +9,14 @@ import {
   Modal,
   IconButton,
   Fade,
+  Box
 } from "@mui/material";
 import CancelIcon from '@mui/icons-material/CancelOutlined'
 import { ref, getDownloadURL } from "firebase/storage";
 import { firebaseStorage } from "../../firebase";
 import { useAppStore } from "../../store";
+import CloudQueueIcon from '@mui/icons-material/CloudQueue';
+
 const UploadedIds = () => {
   const user = useAppStore((state) => state.user);
   const [files, setFiles] = useState({
@@ -58,9 +61,13 @@ const UploadedIds = () => {
 
   return (
     <Paper elevation={3} sx={{ padding: 2, borderRadius: "15px", minHeight: 290 }}>
-      <Typography variant="h1" sx={{ fontSize: "18px", fontWeight: "bold", margin: "10px" }}>
-        Uploaded Documents
-      </Typography>
+      <Box sx={{ display: 'inline-flex' }}>
+        <CloudQueueIcon sx={{ fontSize: 35, color: '#a597ad' }} />
+        <Typography variant="h1" sx={{ fontSize: "18px", fontWeight: "bold", margin: "10px" }}>
+          Uploaded Documents
+        </Typography>
+      </Box>
+
       <Divider light sx={{ marginBottom: "10px" }} />
       <Grid container spacing={2}>
         <Grid item xs={12} sm={3.5}>
@@ -105,7 +112,7 @@ const UploadedIds = () => {
       >
         <Fade in={!!selectedImage}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
-          <IconButton
+            <IconButton
               aria-label="close"
               onClick={handleCloseModal}
               sx={{
@@ -115,7 +122,7 @@ const UploadedIds = () => {
                 color: "white", // Change the color as needed
               }}
             >
-              <CancelIcon sx={{fontSize:50}} />
+              <CancelIcon sx={{ fontSize: 50 }} />
             </IconButton>
             <img src={selectedImage} alt="Selected Image" style={{ maxWidth: "100%", maxHeight: "100%" }} />
           </div>
