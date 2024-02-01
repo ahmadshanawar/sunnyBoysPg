@@ -31,10 +31,10 @@ const ActionAreaCard = (props) => {
           </CardMedia>
         </Box>
         <CardContent >
-          <Typography gutterBottom variant="h5" component="div">
+          <Typography gutterBottom variant="h6" sx={{fontSize:'24px', fontWeight:'bold'}}  component="div">
             {heading}
           </Typography>
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body2" sx={{fontSize:'18px'}} color="text.secondary">
             {subText}
           </Typography>
         </CardContent>

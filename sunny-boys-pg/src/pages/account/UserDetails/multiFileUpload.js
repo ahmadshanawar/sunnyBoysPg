@@ -86,7 +86,7 @@ const MultiFileUpload = () => {
 
   const handleInputChange = async (type, file) => {
     let compressedFile;
-    const storageRef = ref(firebaseStorage, `${userData.emailUid}/${type}_${file.name}`);
+    const storageRef = ref(firebaseStorage, `${userData.emailUid}/${type}`);
     try {
       if (!file || !file.type.startsWith('image/')) {
         setUploadError({ value: true, message: 'Invalid file selected. Please choose an image file' })
@@ -99,23 +99,18 @@ const MultiFileUpload = () => {
         setCompressionError({ value: true, message: err.message })
       }
       const uploadTask = uploadBytesResumable(storageRef, compressedFile);
-
       uploadTask.on('state_changed', (snapshot) => {
         const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         setUploadProgress((prevProgress) => ({ ...prevProgress, [type]: progress }));
-
         if (progress === 100) {
           setFiles((prevFiles) => ({ ...prevFiles, [type]: file }));
-          setUserData({ ...userData, [`${type}FileName`]: `${type}_${file.name}` });
+          setUserData({ ...userData, [`${type}FileName`]: `${type}` });
         }
-
         console.log(`File ${file.name} uploaded successfully!`);
       }, (error) => {
-
         setUploadError({ value: true, message: error.message });
         setUploadProgress((prevProgress) => ({ ...prevProgress, [type]: 0 }));
       });
-
     } catch (e) {
       setUploadError({ value: true, message: e.message });
       setUploadProgress((prevProgress) => ({ ...prevProgress, [type]: 0 }));
@@ -124,7 +119,6 @@ const MultiFileUpload = () => {
 
   return (
     <>
-
       <Typography variant="h6" gutterBottom style={{ marginBottom: '20px' }}>
         Upload ID Photos
       </Typography>

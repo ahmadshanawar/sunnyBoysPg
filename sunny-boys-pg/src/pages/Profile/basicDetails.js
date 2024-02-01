@@ -1,10 +1,11 @@
-import ListItemIcon from '@mui/material/ListItemIcon';
 import RoomIcon from '@mui/icons-material/Room';
 import PersonIcon from '@mui/icons-material/Person';
 import { Paper, Divider, Grid, Avatar, TextField, Button, Box, Typography } from '@mui/material'
 import { useAppStore } from '../../store';
 import { format, parseISO } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
+import RecentActorsIcon from '@mui/icons-material/RecentActors';
+import SingleFileUpload from '../account/UserDetails/profilePicture';
 
 const BasicDetails = () => {
   const navigate = useNavigate()
@@ -12,9 +13,12 @@ const BasicDetails = () => {
   return (
     <Paper elevation={3} sx={{ padding: 2, borderRadius: '20px', marginBottom: '20px', minHeight: 400 }}>
       <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-        <Typography variant="h1" sx={{ fontSize: '18px', fontWeight: 'bold', margin: '10px' }}>Basic Details</Typography>
+        <Box sx={{ display: 'inline-flex' }}>
+          <RecentActorsIcon sx={{ fontSize: 40, color: '#a597ad' }} />
+          <Typography variant="h1" sx={{ fontSize: '18px', fontWeight: 'bold', margin: '10px' }}>Basic Details</Typography>
+        </Box>
         <Button
-          sx={{ height: '30px', alignContent: 'center' }}
+          sx={{ height: '30px', alignContent: 'center', backgroundColor: '#7d0e79' }}
           variant="contained"
           color="primary"
           onClick={() => navigate('/register')}
@@ -22,35 +26,31 @@ const BasicDetails = () => {
           Edit
         </Button>
       </Box>
-      <Divider light sx={{ marginBottom: '20px' }} />
+      <Divider light sx={{ marginBottom: '5px',}} />
       <Box sx={{ display: 'flex', flexDirection: 'row' }}>
         <Box>
-          <Avatar
-            color="primary"
-            size="lg"
-            variant="soft"
-            sx={{ height: '90px', width: '90px' }}
-          />
+          <SingleFileUpload/>
         </Box>
         <Box sx={{ padding: '10px' }}>
           <Divider orientation="vertical" sx={{ borderRightWidth: 3, backgroundColor: 'gray' }} />
         </Box>
-        <Box sx={{ paddingTop: '1px' }}>
+        <Box sx={{ paddingTop: '20px' }}>
           <Typography sx={{ fontSize: 22, paddingLeft: '2px', fontWeight: 'bold' }}>
             {user.name.charAt(0).toUpperCase() + user.name.slice(1)}
           </Typography>
-          <Typography sx={{ fontSize: 19 }}>
-            <ListItemIcon style={{ minWidth: '20px' }} >
-              <RoomIcon fontSize="inherit" />
-            </ListItemIcon>
-            Room Number
-          </Typography>
-          <Typography sx={{ fontSize: 17 }}>
-            <ListItemIcon style={{ minWidth: '20px' }} >
-              <PersonIcon fontSize="inherit" />
-            </ListItemIcon>
-            {user.occupancyType.charAt(0).toUpperCase() + user.occupancyType.slice(1)} Sharing
-          </Typography>
+          <Box sx={{ display: 'inline-flex' }}>
+            <RoomIcon />
+            <Typography sx={{ fontSize: 19 }}>
+              Room Number
+            </Typography>
+          </Box>
+          <br/>
+          <Box sx={{ display: 'inline-flex' }}>
+            <PersonIcon />
+            <Typography sx={{ fontSize: 19 }}>
+              {user.occupancyType.charAt(0).toUpperCase() + user.occupancyType.slice(1)} Sharing
+            </Typography>
+          </Box>
         </Box>
       </Box>
       <Grid container spacing={2}>
@@ -166,7 +166,7 @@ const BasicDetails = () => {
             id="Checked In Date"
             label="Checked In Date"
             name="Checked In Date"
-            value={format(parseISO(user?.checkInDate), 'dd-MM-yyyy')}
+            value={user.checkInDate && format(parseISO(user?.checkInDate), 'dd-mm-yyyy')}
           // onChange={(e) => setPassword(e.target.value)}
           />
         </Grid>
@@ -180,7 +180,7 @@ const BasicDetails = () => {
             id="Tentative Checkout Date"
             label="Tentative Checkout Date"
             name="Tentative Checkout Date"
-            value={format(parseISO(user?.checkOutDate), 'dd-MM-yyyy')}
+            value={user.checkOutDate && format(parseISO(user?.checkOutDate), 'dd-mm-yyyy')}
           // onChange={(e) => setPassword(e.target.value)}
           />
         </Grid>

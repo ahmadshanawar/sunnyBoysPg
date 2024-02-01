@@ -25,6 +25,7 @@ const RegistrationForm = () => {
   const navigate = useNavigate();
   const userData = useAppStore(state => state.user)
   const setUserData = useAppStore(state => state.setUser)
+  const setIsLoggedIn = useAppStore(state => state.setIsLoggedIn)
 
   const [userPhotoes, setUserPhotoes] = useState({
     adhaarFront: null,
@@ -56,7 +57,7 @@ const RegistrationForm = () => {
   };
 
   const validateAdhaarNumber = (value) => {
-    const isValid = /^\d{12}$/.test(value) 
+    const isValid = /^\d{12}$/.test(value)
     //&& validator.isValidNumber(value);
     return isValid ? '' : 'Adhaar number must be a Valid 12-digit number';
   };
@@ -117,12 +118,13 @@ const RegistrationForm = () => {
     if (isFormValid()) {
       try {
         await setDoc(doc(firebaseDb, "Users", userData.emailUid), { ...userData, ...state });
+        setIsLoggedIn(true);
+        setUserData({ ...userData, isUserRegistered: true })
         navigate('/profile')
       }
       catch (err) {
         console.log(err)
       }
-      console.log(userData);
     } else {
       alert('Please fill in the form correctly');
     }
@@ -199,7 +201,7 @@ const RegistrationForm = () => {
             value={userData.parentName}
             onChange={(e) => handleInputChange('parentName', e.target.value)}
             helperText={userData.parentName ? validationErrors.parentName : ''}
-            error={!!validationErrors.parentName && userData.parentName}
+            error={!!validationErrors.parentName && !!userData.parentName}
             style={{ marginBottom: '15px', marginTop: '15px' }}
           />
           <TextField

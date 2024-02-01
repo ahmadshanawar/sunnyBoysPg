@@ -1,5 +1,6 @@
 import { useAppStore } from "../../store";
-import { Grid, Divider, Paper, TextField, Typography } from "@mui/material";
+import { Grid, Divider, Paper, TextField, Typography , Box } from "@mui/material";
+import HomeIcon from '@mui/icons-material/Home';
 
 const AddressDetails = () => {
   const user = useAppStore((state) => state.user);
@@ -7,7 +8,11 @@ const AddressDetails = () => {
 
   return (
     <Paper elevation={3} sx={{ padding: 2, borderRadius: '20px', marginBottom: '20px', minHeight:315 }}>
-      <Typography variant="h1" sx={{ fontSize: '18px', fontWeight: 'bold', margin: '10px' }}>Address Details</Typography>
+       <Box sx={{ display: 'inline-flex' }}>
+        <HomeIcon sx={{ fontSize: 40, color: '#a597ad' }} />
+        <Typography variant="h1" sx={{ fontSize: '18px', fontWeight: 'bold', margin: '10px' }}>Address Details</Typography>
+      </Box>
+     
       <Divider light sx={{ marginBottom: '10px' }} />
       <Grid container spacing={2}>
         <Grid item xs={12} sm={4} >

@@ -8,37 +8,50 @@ import AddressDetails from "../Profile/addressDetails";
 import UploadedIds from "../Profile/uploadedIds";
 import BasicDetails from "../Profile/basicDetails";
 import PaymentDetails from "../Profile/paymentDetails";
+import { useNavigate } from "react-router";
 
 const Profile = () => {
+  const navigate = useNavigate();
   const setUser = useAppStore((state) => state.setUser);
   const user = useAppStore((state) => state.user);
   const setIsLoggedIn = useAppStore(state => state.setIsLoggedIn);
   const isLoggedIn = useAppStore(state => state.isLoggedIn);
-
-  const getUserInformation = async () => {
-    try {
-      const docRef = doc(firebaseDb, "Users", user.emailUid);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        console.log("Document data:", docSnap.data());
-        const result = docSnap.data();
-        setUser(result);
-        setIsLoggedIn(true)
-      } else {
-        console.log("No such document!");
+  const getUserInformation = async () => {   
+      try {
+        const docRef = doc(firebaseDb, "Users", user.emailUid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {          
+          const result = docSnap.data();
+          setUser(result);
+          setIsLoggedIn(true)
+        } else {
+          console.log("No such document!");
+          setIsLoggedIn(false);
+          navigate('/register')
+        }
+      } catch (err) {
+        console.log(err)
         setIsLoggedIn(false)
       }
-    } catch (err) {
-      console.log(err)
-      setIsLoggedIn(false)
     }
-  }
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      navigate('/login')
+    }
+  }, [isLoggedIn])
+
+  useEffect(() => {
+    if (!user.isUserRegistered) {
+      navigate('/register')
+    }
+  }, [user.isUserRegistered])
 
   useEffect(() => {
     getUserInformation()
   }, []);
 
-  return (isLoggedIn &&
+  return ((isLoggedIn && user.isUserRegistered) &&
     <Box sx={{ marginTop: '5%', marginLeft: '3%', marginRight: '3%' }}>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6.5} >
