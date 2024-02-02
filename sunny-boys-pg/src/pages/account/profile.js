@@ -16,36 +16,33 @@ const Profile = () => {
   const user = useAppStore((state) => state.user);
   const setIsLoggedIn = useAppStore(state => state.setIsLoggedIn);
   const isLoggedIn = useAppStore(state => state.isLoggedIn);
-  const getUserInformation = async () => {   
-      try {
-        const docRef = doc(firebaseDb, "Users", user.emailUid);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {          
-          const result = docSnap.data();
-          setUser(result);
-          setIsLoggedIn(true)
-        } else {
-          console.log("No such document!");
-          setIsLoggedIn(false);
+  const getUserInformation = async () => {
+    try {
+      const docRef = doc(firebaseDb, "Users", user.emailUid);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        const result = docSnap.data();
+        if(!result.isUserRegistered)
+        {
           navigate('/register')
         }
-      } catch (err) {
-        console.log(err)
-        setIsLoggedIn(false)
+        setUser(result);
+        setIsLoggedIn(true)
+      } else {
+        console.log("No such document!");
+        setIsLoggedIn(false);
       }
+    } catch (err) {
+      console.log(err)
+      setIsLoggedIn(false)
     }
+  }
 
   useEffect(() => {
     if (!isLoggedIn) {
       navigate('/login')
     }
   }, [isLoggedIn])
-
-  useEffect(() => {
-    if (!user.isUserRegistered) {
-      navigate('/register')
-    }
-  }, [user.isUserRegistered])
 
   useEffect(() => {
     getUserInformation()

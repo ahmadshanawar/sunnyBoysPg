@@ -26,8 +26,8 @@ const FileCard = ({ file, handleInputChange }) => {
       >
         {file ? (
           <div style={{ position: 'relative' }}>
-            <CardMedia
-              image={file}
+            <img
+              src={file}
               component='img'
               style={{ width: '100%', height: '100%', objectFit: 'fill' }}
             />
@@ -79,7 +79,6 @@ const SingleFileUpload = () => {
     let compressedFile;
     const storageRef = ref(firebaseStorage, `${userData.emailUid}/profilePicture`);
     const selectedFile = e.target.files[0];
-    debugger;
     try {
       if (!selectedFile || !selectedFile.type.startsWith('image/')) {
         setUploadError({ value: true, message: 'Invalid file selected. Please choose an image file' });
@@ -113,7 +112,6 @@ const SingleFileUpload = () => {
 
   const downloadFile = async (fileName) => {
     try {
-      debugger;
       const filePath = `${userData.emailUid}/${userData[fileName]}`;
       const fileRef = ref(firebaseStorage, filePath);
       await getDownloadURL(fileRef)

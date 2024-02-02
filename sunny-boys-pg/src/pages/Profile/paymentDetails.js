@@ -55,12 +55,12 @@ const PaymentDetails = () => {
   };
 
   return (
-    <Paper elevation={3} sx={{ padding: 2, borderRadius: '20px', marginBottom: '20px', minHeight: 400 }}>
+    <Paper elevation={3} sx={{ padding: 2, borderRadius: '20px', marginBottom: '20px', minHeight: 420 }}>
       <Box sx={{ display: 'inline-flex' }}>
         <CurrencyRupeeIcon sx={{ fontSize: 35, color: '#a597ad' }} />
         <Typography variant="h1" sx={{ fontSize: '18px', fontWeight: 'bold', margin: '6px' }}>Payment Details</Typography>
       </Box>
-      <Divider light sx={{ marginBottom: '10px' }} />
+      <Divider light sx={{ marginBottom: '32px' }} />
       <TableContainer component={Paper} sx={{ maxHeight: 348 }}>
         <Table size="small">
           <TableHead>

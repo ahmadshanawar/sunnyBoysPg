@@ -82,7 +82,6 @@ const Signup = () => {
   };
 
   const handleVerifyOtp = async () => {
-    debugger;
     setIsLoading(true)
     try {
       const otpResult = await otpConfirmation.confirm(otp);
@@ -94,7 +93,8 @@ const Signup = () => {
         occupancyType: 'double',
         finalizedRent: '2500',
         mobileUid: otpResult.user.uid,
-        mobile: otpResult.user.phoneNumber
+        mobile: otpResult.user.phoneNumber,
+        isUserRegistered: false
       })
       setIsLoading(false)
     } catch (error) {
@@ -133,7 +133,6 @@ const Signup = () => {
     if (otpVerified) {
       try {
         setIsLoading(true);
-        debugger;
         const userCredential = await createUserWithEmailAndPassword(firebaseAuth, user.email, user.password);
         const current_user = userCredential.user;
         await setDoc(doc(firebaseDb, "Users", current_user.uid), { ...user, emailUid: current_user.uid });
