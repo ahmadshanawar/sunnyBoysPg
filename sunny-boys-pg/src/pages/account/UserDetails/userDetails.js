@@ -58,6 +58,7 @@ const RegistrationForm = () => {
 
   const validateAdhaarNumber = (value) => {
     const isValid = /^\d{12}$/.test(value)
+    //TODO
     //&& validator.isValidNumber(value);
     return isValid ? '' : 'Adhaar number must be a Valid 12-digit number';
   };
@@ -117,9 +118,10 @@ const RegistrationForm = () => {
   const handleSubmit = async () => {
     if (isFormValid()) {
       try {
-        await setDoc(doc(firebaseDb, "Users", userData.emailUid), { ...userData, ...state });
-        setIsLoggedIn(true);
         setUserData({ ...userData, isUserRegistered: true })
+        await setDoc(doc(firebaseDb, "Users", userData.emailUid), { ...userData, isUserRegistered: true });
+        setIsLoggedIn(true);
+
         navigate('/profile')
       }
       catch (err) {

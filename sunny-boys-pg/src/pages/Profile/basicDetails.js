@@ -11,7 +11,7 @@ const BasicDetails = () => {
   const navigate = useNavigate()
   const user = useAppStore(state => state.user)
   return (
-    <Paper elevation={3} sx={{ padding: 2, borderRadius: '20px', marginBottom: '20px', minHeight: 400 }}>
+    <Paper elevation={3} sx={{ padding: 2, borderRadius: '20px', marginBottom: '20px', minHeight: 420 }}>
       <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
         <Box sx={{ display: 'inline-flex' }}>
           <RecentActorsIcon sx={{ fontSize: 40, color: '#a597ad' }} />

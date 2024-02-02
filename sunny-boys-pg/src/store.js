@@ -26,8 +26,8 @@ export const initialState = {
   finalizedRent: '2500',
   adhaarFrontFileName: '',
   adhaarBackFileName: '',
-  collegeIdPhotoFileName:'',
-  isUserRegistred:false
+  collegeIdPhotoFileName: '',
+  isUserRegistered: false
 }
 
 const resetUserToEmpty = () => {

@@ -27,7 +27,7 @@ const TopAppBar = ({ onMenuIconClick, isSidebarOpen }) => {
       }}
     >
       <Toolbar>
-        <IconButton
+       {user?.role==='Admin' && <IconButton
           edge="start"
           color="inherit"
           aria-label="menu"
@@ -35,7 +35,7 @@ const TopAppBar = ({ onMenuIconClick, isSidebarOpen }) => {
           sx={{ marginRight: 2 }}
         >
           <MenuIcon />
-        </IconButton>
+        </IconButton>}
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           Sunny Boys' PG
         </Typography>

@@ -12,6 +12,8 @@ import { signInWithEmailAndPassword, setPersistence, browserSessionPersistence }
 import { firebaseAuth } from '../../firebase';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../../store';
+import ClosableAlert from '../../common/closableAlert';
+
 const CenteredContainer = styled(Container)({
   display: 'flex',
   justifyContent: 'center',
@@ -52,11 +54,11 @@ const Login = () => {
           try {
             const userCredential = await signInWithEmailAndPassword(firebaseAuth, userId, password);
             const userCred = userCredential.user;
-            setUser({ ...user, emailUid: userCred.uid });
+            setUser({ ...user, emailUid: userCred.uid});
             setIsLoggedIn(true);
             navigate('/profile')
-
           } catch (error) {
+            setError(error.message)
             const errorCode = error.code;
             const errorMessage = error.message;
             console.log(errorMessage);
@@ -64,8 +66,7 @@ const Login = () => {
         })
         .catch((error) => {
           // Handle Errors here.
-          const errorCode = error.code;
-          const errorMessage = error.message;
+          setError(error.message)
         });
 
 
@@ -83,6 +84,7 @@ const Login = () => {
   return (
     <CenteredContainer component="main" maxWidth="xs">
       <CenteredPaper elevation={3}>
+        {error && <ClosableAlert messege={error} severity={"error"}/>}
         <Typography component="h1" variant="h5">
           Login
         </Typography>
