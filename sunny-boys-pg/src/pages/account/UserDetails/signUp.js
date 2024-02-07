@@ -12,6 +12,7 @@ import { setDoc, doc } from '@firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../../../store';
 import ClosableAlert from '../../../common/closableAlert';
+import { format } from 'date-fns'
 
 const Signup = () => {
   const setUser = useAppStore(state => state.setUser);
@@ -90,11 +91,14 @@ const Signup = () => {
         ...user,
         status: 'Awaiting Approval',
         role: 'READ',
-        occupancyType: 'double',
+        occupancyType: 'Double',
         finalizedRent: '2500',
         mobileUid: otpResult.user.uid,
         mobile: otpResult.user.phoneNumber,
-        isUserRegistered: false
+        isUserRegistered: false,
+        paymentHistory: [
+          { amountDue: '0', dueDate: format(new Date(), 'dd-mm-yyyy'), status: 'Pending', paidOn: format(new Date(), 'dd-mm-yyyy') }
+        ]
       })
       setIsLoading(false)
     } catch (error) {

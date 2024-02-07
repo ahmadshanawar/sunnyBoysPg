@@ -17,10 +17,8 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import WarningIcon from '@mui/icons-material/Warning';
 import { format } from 'date-fns';
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
-import { useAppStore } from '../../store';
 
-const PaymentDetails = () => {
-  const paymentHistory = useAppStore(state => state.user?.paymentHistory)
+const PaymentsTable = ({ paymentHistory }) => {
   const [orderBy, setOrderBy] = useState(null);
   const [order, setOrder] = useState('asc');
 
@@ -47,11 +45,7 @@ const PaymentDetails = () => {
   };
 
   return (
-    <Paper elevation={3} sx={{ padding: 2, borderRadius: '20px', marginBottom: '20px', minHeight: 290 }}>
-      <Box sx={{ display: 'inline-flex' }}>
-        <CurrencyRupeeIcon sx={{ fontSize: 35, color: '#a597ad' }} />
-        <Typography variant="h1" sx={{ fontSize: '18px', fontWeight: 'bold', margin: '6px' }}>Payment Details</Typography>
-      </Box>
+    <Paper elevation={3} sx={{ padding: 1, borderRadius: '20px', marginBottom: '2px', minHeight: 290 }}>
       <Divider light sx={{ marginBottom: '2px' }} />
       <TableContainer component={Paper} sx={{ maxHeight: 348 }}>
         <Table size="small">
@@ -73,7 +67,7 @@ const PaymentDetails = () => {
                   direction={orderBy === 'paymentAmount' ? order : 'asc'}
                   onClick={() => handleSort('paymentAmount')}
                 >
-                  <Typography fontWeight="bold">Amount ₹</Typography>
+                  <Typography fontWeight="bold">Rent</Typography>
 
                 </TableSortLabel>
               </TableCell>
@@ -95,24 +89,45 @@ const PaymentDetails = () => {
                   <Typography fontWeight="bold">Payment Date</Typography>
                 </TableSortLabel>
               </TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={orderBy === 'paymentDate'}
+                  direction={orderBy === 'paymentDate' ? order : 'asc'}
+                  onClick={() => handleSort('paymentDate')}
+                >
+                  <Typography fontWeight="bold">Payment Amount</Typography>
+                </TableSortLabel>
+              </TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={orderBy === 'paymentDate'}
+                  direction={orderBy === 'paymentDate' ? order : 'asc'}
+                  onClick={() => handleSort('paymentDate')}
+                >
+                  <Typography fontWeight="bold">Amount Due</Typography>
+                </TableSortLabel>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {sortedPaymentHistory.map((payment, index) => (
-              <TableRow key={index}>
-                <TableCell>{payment?.dueDate && format(payment.dueDate, 'yyyy-MMM-mm')}</TableCell>
-                <TableCell>{payment.paymentAmount}</TableCell>
-                <TableCell>
-                  <Stack direction={'row'} sx={{display:'inline-flex'}}>
-                    <>
-                      {getStatusIcon(payment.status)}
-                    </>
-                    <Box sx={{padding:'5px'}}>
+              <TableRow key={index} >
+                <TableCell sx={{fontWeight:'bold'}}>{format(payment.dueDate, 'yyyy-MMM-dd')}</TableCell>
+                <TableCell sx={{fontWeight:'bold'}}>₹{payment.dueAmount}</TableCell>
+                <TableCell sx={{fontWeight:'bold'}}>
+                  <Stack direction={'row'} sx={{ display: 'inline-flex' }}>
+                    <Stack direction={'row'} display={'inline-flex'}>
+                      <Box>{getStatusIcon(payment.paymentStatus)}</Box>
+                      <Box pt={.75}>{payment.paymentStatus}</Box>
+                    </Stack>
+                    <Box sx={{ padding: '5px' }}>
                       {payment.status}
                     </Box>
                   </Stack>
                 </TableCell>
-                <TableCell>{payment?.paymentDate && format(payment.paymentDate, 'yyyy-MMM-mm') }</TableCell>
+                <TableCell sx={{fontWeight:'bold'}}>{payment?.paymentDate && payment.paymentDate}</TableCell>
+                <TableCell sx={{fontWeight:'bold'}}>{payment?.paymentAmount && payment.paymentAmount}</TableCell>
+                <TableCell sx={{fontWeight:'bold'}}>₹{payment?.dueAmount && payment.dueAmount}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -122,4 +137,4 @@ const PaymentDetails = () => {
   );
 };
 
-export default PaymentDetails;
+export default PaymentsTable;

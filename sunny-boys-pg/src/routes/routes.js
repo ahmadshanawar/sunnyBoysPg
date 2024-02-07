@@ -6,6 +6,9 @@ import Profile from "../pages/account/profile";
 import Login from "../pages/account/login";
 import Layout from "../layout";
 import Logout from "../pages/account/logout";
+import Dashboard from "../pages/admin/dashboard";
+import Lobby from "../pages/admin/Lobby/lobby";
+import TennantPayments from "../pages/admin/Payments/tennantPayments";
 const router = createBrowserRouter([
     {
         path: "/",
@@ -17,7 +20,9 @@ const router = createBrowserRouter([
     },
     {
         path: '/signUp',
-        element: <Signup />
+        element: <Layout>
+            <Signup />
+        </Layout>
     },
     {
         path: '/register',
@@ -40,6 +45,26 @@ const router = createBrowserRouter([
     {
         path: '/logout',
         element: <Logout />
-    }
+    },
+    {
+        path: '/dashboard',
+        element: <Layout>
+            <Dashboard />
+        </Layout>
+    },
+    {
+        path: '/lobby',
+        element: <Layout>
+            <Lobby />
+        </Layout>
+    },
+    {
+        path: '/tennantPayments',
+        element: <Layout>
+            <TennantPayments/>
+        </Layout>
+    },
+
+    TennantPayments
 ]);
 export default router;

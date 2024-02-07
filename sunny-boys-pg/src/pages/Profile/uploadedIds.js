@@ -17,7 +17,7 @@ import { firebaseStorage } from "../../firebase";
 import { useAppStore } from "../../store";
 import CloudQueueIcon from '@mui/icons-material/CloudQueue';
 
-const UploadedIds = () => {
+const UploadedIds = (props) => {
   const user = useAppStore((state) => state.user);
   const [files, setFiles] = useState({
     adhaarFrontFileName: null,
@@ -28,7 +28,7 @@ const UploadedIds = () => {
 
   const downloadFile = async (fileName) => {
     try {
-      const filePath = `${user.emailUid}/${user[fileName]}`;
+      const filePath = `${props?.userUid ? props.userUid : user.emailUid}/${user[fileName]}`;
       const fileRef = ref(firebaseStorage, filePath);
       getDownloadURL(fileRef)
         .then((downloadUrl) => {
@@ -60,8 +60,8 @@ const UploadedIds = () => {
   };
 
   return (
-    <Paper elevation={3} sx={{ padding: 2, borderRadius: "15px", minHeight: 290 }}>
-      <Box sx={{ display: 'inline-flex' }}>
+    <Card elevation={3} sx={{ padding: 2, borderRadius: "15px", minHeight: 290 }}>     
+     <Box sx={{ display: 'inline-flex' }}>
         <CloudQueueIcon sx={{ fontSize: 35, color: '#a597ad' }} />
         <Typography variant="h1" sx={{ fontSize: "18px", fontWeight: "bold", margin: "10px" }}>
           Uploaded Documents
@@ -73,7 +73,7 @@ const UploadedIds = () => {
         <Grid item xs={12} sm={3.5}>
           <Typography sx={{ fontSize: "14px", fontWeight: "bold", margin: "10px", color: "gray" }}>Adhaar Front</Typography>
           {files.adhaarFrontFileName && (
-            <Card sx={{ height: 220 }} onClick={() => handleImageClick(files.adhaarFrontFileName)}>
+            <Card sx={{ height: 150 }} onClick={() => handleImageClick(files.adhaarFrontFileName)}>
               <CardMedia component="img" alt="Adhaar Front" maxheight="180" image={files.adhaarFrontFileName} />
             </Card>
           )}
@@ -84,7 +84,7 @@ const UploadedIds = () => {
         <Grid item xs={12} sm={3.5}>
           <Typography sx={{ fontSize: "14px", fontWeight: "bold", margin: "10px", color: "gray" }}>Adhaar Back</Typography>
           {files.adhaarBackFileName && (
-            <Card sx={{ height: 220 }} onClick={() => handleImageClick(files.adhaarBackFileName)}>
+            <Card sx={{ height: 150 }} onClick={() => handleImageClick(files.adhaarBackFileName)}>
               <CardMedia component="img" alt="Adhaar Back" maxheight="180" image={files.adhaarBackFileName} />
             </Card>
           )}
@@ -95,7 +95,7 @@ const UploadedIds = () => {
         <Grid item xs={12} sm={3.5}>
           <Typography sx={{ fontSize: "14px", fontWeight: "bold", margin: "10px", color: "gray" }}>Alternate ID</Typography>
           {files.collegeIdPhotoFileName && (
-            <Card sx={{ height: 220 }} onClick={() => handleImageClick(files.collegeIdPhotoFileName)}>
+            <Card sx={{ height: 150 }} onClick={() => handleImageClick(files.collegeIdPhotoFileName)}>
               <CardMedia component="img" alt="Alternate ID" maxheight="180" image={files.collegeIdPhotoFileName} />
             </Card>
           )}
@@ -128,7 +128,7 @@ const UploadedIds = () => {
           </div>
         </Fade>
       </Modal>
-    </Paper>
+    </Card>
   );
 };
 

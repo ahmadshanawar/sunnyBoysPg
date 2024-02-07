@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 export const initialState = {
@@ -22,12 +23,15 @@ export const initialState = {
   pinCode: '',
   status: 'Awaiting Approval',
   role: 'READ',
-  occupancyType: 'double',
+  occupancyType: 'Double',
   finalizedRent: '2500',
   adhaarFrontFileName: '',
   adhaarBackFileName: '',
   collegeIdPhotoFileName: '',
-  isUserRegistered: false
+  isUserRegistered: false,
+  paymentHistory: [
+    { amountDue: '0', dueDate: format(new Date(), 'dd-mm-yyyy'), status:'Pending', paidOn: format(new Date(), 'dd-mm-yyyy')}
+  ]
 }
 
 const resetUserToEmpty = () => {

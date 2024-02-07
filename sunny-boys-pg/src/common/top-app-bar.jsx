@@ -13,7 +13,7 @@ const TopAppBar = ({ onMenuIconClick, isSidebarOpen }) => {
   const user = useAppStore(state => state.user);
   return (
     <AppBar
-      position="fixed"
+      position="static"
       sx={{
         backgroundColor: '#251a33',
         transition: (theme) => theme.transitions.create(['width', 'margin'], {
