@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
 import { query, collection, where, getDocs } from "@firebase/firestore";
 import { firebaseDb } from "../../../firebase";
-import { Paper, Typography, Grid, Divider, Box, Container, Card } from "@mui/material";
+import { Paper, Typography, Grid, Divider,  Container, Card } from "@mui/material";
 import PaymentsAccordian from "./paymentsAccordian";
-import { doc, updateDoc } from "@firebase/firestore";
-import { format, addMonths } from 'date-fns';
 
 const TennantPayments = () => {
   const [tennants, setTennants] = useState([])
@@ -25,22 +23,6 @@ const TennantPayments = () => {
     }
   }
 
-  const handleSave = async (stateObj) => {
-    console.log(stateObj)
-    try {
-      const userRef = doc(firebaseDb, "Users", stateObj.uid);
-      await updateDoc(userRef, {
-        ...stateObj,
-        dueDate: format(addMonths(new Date(stateObj.checkInDate), 1), 'yyyy-MM-dd')
-      });
-      getTennents()
-      console.log('successfully updated')
-    }
-    catch (err) {
-      console.log(err)
-    }
-  }
-
   useEffect(() => {
     getTennents()
   }, []);
@@ -54,7 +36,7 @@ const TennantPayments = () => {
           <Grid item xs={12}>
             <Paper>
               {tennants.map((tennant) => {
-                return <PaymentsAccordian key={tennant.emailUid} tennant={tennant} handleSave={handleSave} />
+                return <PaymentsAccordian key={tennant.emailUid} tennant={tennant} />
               })}
             </Paper>
           </Grid>

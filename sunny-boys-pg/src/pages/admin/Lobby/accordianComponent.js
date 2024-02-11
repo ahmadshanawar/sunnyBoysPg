@@ -25,9 +25,10 @@ const AccordianComponent = ({ tennant, handleSave }) => {
         status,
         uid: tennant.emailUid,
         paymentHistory: [{
+          createdAt:new Date(),
           dueDate: format(new Date(checkInDate), 'yyyy-MM-dd'),
           dueAmount:rentAmount,
-          paymentStatus: 'Pending',
+          status: 'Pending',
           paymentDate: '',
           paymentAmount:0,
           rent:rentAmount
@@ -175,7 +176,7 @@ const AccordianComponent = ({ tennant, handleSave }) => {
               </FormControl>
               {(tennant?.status !== 'Dormant') && <Stack direction={"row"} justifyContent={"space-between"}>
                 <Switch sx={{ marginLeft: '10px' }} onClick={() => { setSwitchToggle(!switchToggle) }}>Save</Switch>
-                <Button size="small" disabled={switchToggle} variant="contained" color="success" onClick={handleApproveUser}>Approve</Button>
+                <Button size="small" disabled={switchToggle} variant="contained" color="success" onClick={handleApproveUser}>Save</Button>
               </Stack>}
             </FormControl>
 

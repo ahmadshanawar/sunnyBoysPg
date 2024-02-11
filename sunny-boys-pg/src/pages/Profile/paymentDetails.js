@@ -15,7 +15,6 @@ import {
 } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import WarningIcon from '@mui/icons-material/Warning';
-import { format } from 'date-fns';
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import { useAppStore } from '../../store';
 
@@ -30,7 +29,7 @@ const PaymentDetails = () => {
     setOrderBy(columnId);
   };
 
-  const sortedPaymentHistory = paymentHistory.sort((a, b) => {
+  const sortedPaymentHistory = paymentHistory?.sort((a, b) => {
     if (order === 'asc') {
       return a[orderBy] > b[orderBy] ? 1 : -1;
     } else {
@@ -98,10 +97,10 @@ const PaymentDetails = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {sortedPaymentHistory.map((payment, index) => (
+            {sortedPaymentHistory?.map((payment, index) => (
               <TableRow key={index}>
-                <TableCell>{payment?.dueDate && format(payment.dueDate, 'yyyy-MMM-mm')}</TableCell>
-                <TableCell>{payment.paymentAmount}</TableCell>
+                <TableCell>{payment?.dueDate}</TableCell>
+                <TableCell>{payment?.paymentAmount}</TableCell>
                 <TableCell>
                   <Stack direction={'row'} sx={{display:'inline-flex'}}>
                     <>
@@ -112,7 +111,7 @@ const PaymentDetails = () => {
                     </Box>
                   </Stack>
                 </TableCell>
-                <TableCell>{payment?.paymentDate && format(payment.paymentDate, 'yyyy-MMM-mm') }</TableCell>
+                <TableCell>{payment?.paymentDate}</TableCell>
               </TableRow>
             ))}
           </TableBody>

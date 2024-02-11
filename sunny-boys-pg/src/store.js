@@ -30,7 +30,7 @@ export const initialState = {
   collegeIdPhotoFileName: '',
   isUserRegistered: false,
   paymentHistory: [
-    { amountDue: '0', dueDate: format(new Date(), 'dd-mm-yyyy'), status:'Pending', paidOn: format(new Date(), 'dd-mm-yyyy')}
+    { amountDue: '0', dueDate: '', status: 'Pending', paidOn: '', crearedAt: new Date() }
   ]
 }
 

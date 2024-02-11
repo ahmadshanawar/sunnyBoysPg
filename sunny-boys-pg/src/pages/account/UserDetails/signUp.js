@@ -97,7 +97,7 @@ const Signup = () => {
         mobile: otpResult.user.phoneNumber,
         isUserRegistered: false,
         paymentHistory: [
-          { amountDue: '0', dueDate: format(new Date(), 'dd-mm-yyyy'), status: 'Pending', paidOn: format(new Date(), 'dd-mm-yyyy') }
+          { amountDue: '0', dueDate: format(new Date(), 'dd-mm-yyyy'), status: 'Pending', paidOn: format(new Date(), 'dd-mm-yyyy'), crearedAt: new Date() }
         ]
       })
       setIsLoading(false)
