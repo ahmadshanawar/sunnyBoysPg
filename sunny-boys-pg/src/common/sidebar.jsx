@@ -7,6 +7,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import ApartmentIcon from '@mui/icons-material/Apartment';
 import BuildIcon from '@mui/icons-material/Build';
 import LobbyIcon from '@mui/icons-material/Dashboard'
+import MoneyIcon from '@mui/icons-material/Money'
 
 const Sidebar = ({ isOpen, onClose }) => {
   return (
@@ -56,7 +57,7 @@ const Sidebar = ({ isOpen, onClose }) => {
         </ListItem>
         <ListItem button onClick={onClose} component={Link} to="/tennantPayments">
           <ListItemIcon>
-            <LobbyIcon />
+            <MoneyIcon />
           </ListItemIcon>
           <ListItemText primary="Payments" />
         </ListItem>
