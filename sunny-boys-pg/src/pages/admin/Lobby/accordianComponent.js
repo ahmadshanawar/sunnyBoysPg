@@ -25,13 +25,13 @@ const AccordianComponent = ({ tennant, handleSave }) => {
         status,
         uid: tennant.emailUid,
         paymentHistory: [{
-          createdAt:new Date(),
+          createdAt: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
           dueDate: format(new Date(checkInDate), 'yyyy-MM-dd'),
-          dueAmount:rentAmount,
+          dueAmount: rentAmount,
           status: 'Pending',
           paymentDate: '',
-          paymentAmount:0,
-          rent:rentAmount
+          paymentAmount: 0,
+          rent: rentAmount
         }]
       }
     )

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Table,
   TableBody,
@@ -18,8 +18,13 @@ import WarningIcon from '@mui/icons-material/Warning';
 import { format } from 'date-fns';
 
 const PaymentsTable = ({ paymentHistory }) => {
-  const [orderBy, setOrderBy] = useState(null);
+  const [orderBy, setOrderBy] = useState('dueDate');
   const [order, setOrder] = useState('asc');
+  
+  // Sort paymentHistory based on createdAt on initial load
+  useEffect(() => {
+    handleSort(orderBy);
+  }, []);
 
   const handleSort = (columnId) => {
     const isAsc = orderBy === columnId && order === 'asc';
@@ -105,6 +110,15 @@ const PaymentsTable = ({ paymentHistory }) => {
                   <Typography fontWeight="bold">Amount Due</Typography>
                 </TableSortLabel>
               </TableCell>
+              <TableCell sx={{ textAlign: 'end' }}>
+                <TableSortLabel
+                  active={orderBy === 'createdAt'}
+                  direction={orderBy === 'createdAt' ? order : 'asc'}
+                  onClick={() => handleSort('createdAt')}
+                >
+                  <Typography >Created At</Typography>
+                </TableSortLabel>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -125,6 +139,7 @@ const PaymentsTable = ({ paymentHistory }) => {
                 <TableCell sx={{ fontWeight: 'bold' }}>{payment?.paymentDate && payment.paymentDate}</TableCell>
                 <TableCell sx={{ fontWeight: 'bold' }}>{payment?.paymentAmount && payment.paymentAmount}</TableCell>
                 <TableCell sx={{ fontWeight: 'bold' }}>₹{payment?.dueAmount && payment.dueAmount}</TableCell>
+                <TableCell sx={{ textAlign: 'end' }}>{payment?.createdAt}</TableCell>
               </TableRow>
             ))}
           </TableBody>
