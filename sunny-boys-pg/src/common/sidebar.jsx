@@ -2,11 +2,11 @@ import React from 'react';
 import { Drawer, List, ListItem, ListItemText, IconButton, ListItemIcon } from '@mui/material';
 import { Link } from 'react-router-dom';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import DashboardIcon from '@mui/icons-material/Dashboard';
+import GridViewIcon from '@mui/icons-material/GridView';
 import PersonIcon from '@mui/icons-material/Person';
 import ApartmentIcon from '@mui/icons-material/Apartment';
-import BuildIcon from '@mui/icons-material/Build';
-import LobbyIcon from '@mui/icons-material/Dashboard'
+import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
+import CameraRearIcon from '@mui/icons-material/CameraRear';
 import MoneyIcon from '@mui/icons-material/Money'
 
 const Sidebar = ({ isOpen, onClose }) => {
@@ -33,9 +33,27 @@ const Sidebar = ({ isOpen, onClose }) => {
         </ListItem>
         <ListItem button onClick={onClose} component={Link} to="/dashboard" >
           <ListItemIcon>
-            <DashboardIcon />
+            <GridViewIcon />
           </ListItemIcon>
           <ListItemText primary="Dashboard" />
+        </ListItem>
+        <ListItem button onClick={onClose} component={Link} to="/lobby">
+          <ListItemIcon>
+            <CameraRearIcon />
+          </ListItemIcon>
+          <ListItemText primary="Lobby" />
+        </ListItem>
+        <ListItem button onClick={onClose} component={Link} to="/tennantPayments">
+          <ListItemIcon>
+            <MoneyIcon />
+          </ListItemIcon>
+          <ListItemText primary="Payments" />
+        </ListItem>
+        <ListItem button onClick={onClose} component={Link} to="/expenseTracker">
+          <ListItemIcon>
+            <CurrencyExchangeIcon />
+          </ListItemIcon>
+          <ListItemText primary="Expenses" />
         </ListItem>
         <ListItem button onClick={onClose} component={Link} to="/profile">
           <ListItemIcon>
@@ -48,18 +66,6 @@ const Sidebar = ({ isOpen, onClose }) => {
             <ApartmentIcon />
           </ListItemIcon>
           <ListItemText primary="Occupancy" />
-        </ListItem>        
-        <ListItem button onClick={onClose} component={Link} to="/lobby">
-          <ListItemIcon>
-            <LobbyIcon />
-          </ListItemIcon>
-          <ListItemText primary="Lobby" />
-        </ListItem>
-        <ListItem button onClick={onClose} component={Link} to="/tennantPayments">
-          <ListItemIcon>
-            <MoneyIcon />
-          </ListItemIcon>
-          <ListItemText primary="Payments" />
         </ListItem>
       </List>
     </Drawer>

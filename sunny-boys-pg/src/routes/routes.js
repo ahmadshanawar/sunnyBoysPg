@@ -9,6 +9,7 @@ import Logout from "../pages/account/logout";
 import Dashboard from "../pages/admin/dashboard";
 import Lobby from "../pages/admin/Lobby/lobby";
 import TennantPayments from "../pages/admin/Payments/tennantPayments";
+import ExpenseTracker from "../pages/admin/Expenses";
 const router = createBrowserRouter([
     {
         path: "/",
@@ -62,6 +63,12 @@ const router = createBrowserRouter([
         path: '/tennantPayments',
         element: <Layout>
             <TennantPayments/>
+        </Layout>
+    },
+    {
+        path: '/expenseTracker',
+        element: <Layout>
+            <ExpenseTracker/>
         </Layout>
     },
 
