@@ -8,7 +8,7 @@ import {
 import { format } from 'date-fns';
 
 const AccordianComponent = ({ tennant, handleSave }) => {
-  const [expanded, setExpanded] = useState(false);                                    
+  const [expanded, setExpanded] = useState(false);
   const [rentAmount, setRentAmount] = useState(tennant?.finalizedRent);
   const [checkInDate, setCheckInDate] = useState(tennant?.checkInDate);
   const [roomNumber, setRoomNumber] = useState(tennant?.roomNumber);
@@ -57,7 +57,7 @@ const AccordianComponent = ({ tennant, handleSave }) => {
     <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <Grid container textAlign={"center"}>
-          <Grid item xs={6} md={2} lg={2}>
+          <Grid item xs={6} md={2} lg={2} mb={2}>
             <Typography fontSize={'14px'} color={'#757575'} fontWeight={'bold'}>Name</Typography>
             <Typography fontSize={'16px'}>{tennant.name}</Typography>
           </Grid>
@@ -86,99 +86,90 @@ const AccordianComponent = ({ tennant, handleSave }) => {
             </Card>
           </Grid>
           <Grid item xs={12} sm={3}>
-            <FormControl>
-              <TextField
-                sx={{ margin: 1, maxWidth: 200 }}
-                size="small"
-                label="Rent Amount"
-                type="number"
-                InputProps={{
-                  inputProps: {
-                    min: 0
-                  }
-                }}
-                disabled={switchToggle}
-                value={rentAmount}
-                onChange={(e) => setRentAmount(e.target.value)}
-                fullWidth
-              />
-              <TextField
-                size="small"
-                sx={{ margin: 1, maxWidth: 200 }}
-                label="Checkin Date"
-                type="date"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                value={checkInDate ? checkInDate : ''}
-                onChange={e => setCheckInDate(e.target.value)}
-                fullWidth
-                disabled={switchToggle}
-              />
-              <FormControl>
-                <InputLabel>Room Number</InputLabel>
-                <Select
-                  disabled={switchToggle}
-                  value={roomNumber}
-                  sx={{ margin: 1, maxWidth: 200 }}
-                  label="Room No"
-                  defaultValue=""
-                  fullWidth
-                  size="small"
-                  onChange={handleRoomNoChange}
-                >
-                  {[1, 2, 3, 4, 5, 6, 8].map(num => (
-                    <MenuItem key={num} value={num}>{num}</MenuItem>
-                  ))}
-                  {[101, 102, 103, 104, 105, 106, 107, 108].map(num => (
-                    <MenuItem key={num} value={num}>{num}</MenuItem>
-                  ))}
-                  {[201, 202, 203, 204, 205, 206, 207, 208].map(num => (
-                    <MenuItem key={num} value={num}>{num}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-              <FormControl>
-                <InputLabel>Occupancy Type</InputLabel>
-                <Select
-                  disabled={switchToggle}
-                  value={occupancyType}
-                  size="small"
-                  label="Occupancy"
-                  defaultValue=""
-                  fullWidth
-                  sx={{ margin: 1, maxWidth: 200 }}
-                  onChange={handleOccupancyTypeChange}
-                >
-                  <MenuItem value="Single">Single</MenuItem>
-                  <MenuItem value="Double">Double</MenuItem>
-                  <MenuItem value="Triple">Triple</MenuItem>
-                </Select>
-              </FormControl>
-              <FormControl>
-                <InputLabel>Status</InputLabel>
-                <Select
-                  disabled={switchToggle}
-                  value={status}
-                  size="small"
-                  label="Status"
-                  defaultValue=""
-                  fullWidth
-                  sx={{ margin: 1, maxWidth: 200 }}
-                  onChange={handleStatusChange}
-                >
-                  <MenuItem value="Active">Active</MenuItem>
-                  <MenuItem value="Awaiting Approval">Awaiting Approval</MenuItem>
-                  <MenuItem value="Rejected">Rejected</MenuItem>
-                  <MenuItem value="Departed">Departed</MenuItem>
+            <TextField
+              sx={{ margin: 1, maxWidth: 200 }}
+              size="small"
+              label="Rent Amount"
+              type="number"
+              InputProps={{
+                inputProps: {
+                  min: 0
+                }
+              }}
+              disabled={switchToggle}
+              value={rentAmount}
+              onChange={(e) => setRentAmount(e.target.value)}
+              fullWidth
+            />
+            <TextField
+              size="small"
+              sx={{ margin: 1, maxWidth: 200 }}
+              label="Checkin Date"
+              type="date"
+              InputLabelProps={{
+                shrink: true,
+              }}
+              value={checkInDate ? checkInDate : ''}
+              onChange={e => setCheckInDate(e.target.value)}
+              fullWidth
+              disabled={switchToggle}
+            />
+            <TextField
+              disabled={switchToggle}
+              value={roomNumber}
+              sx={{ margin: 1, maxWidth: 200 }}
+              label="Room No"
+              defaultValue=""
+              fullWidth
+              size="small"
+              onChange={handleRoomNoChange}
+            >
+              {[1, 2, 3, 4, 5, 6, 8].map(num => (
+                <MenuItem key={num} value={num}>{num}</MenuItem>
+              ))}
+              {[101, 102, 103, 104, 105, 106, 107, 108].map(num => (
+                <MenuItem key={num} value={num}>{num}</MenuItem>
+              ))}
+              {[201, 202, 203, 204, 205, 206, 207, 208].map(num => (
+                <MenuItem key={num} value={num}>{num}</MenuItem>
+              ))}
+            </TextField>
+            <TextField
+              disabled={switchToggle}
+              value={occupancyType}
+              size="small"
+              label="Occupancy"
+              defaultValue=""
+              fullWidth
+              sx={{ margin: 1, maxWidth: 200 }}
+              onChange={handleOccupancyTypeChange}
+            >
+              <MenuItem value="Single">Single</MenuItem>
+              <MenuItem value="Double">Double</MenuItem>
+              <MenuItem value="Triple">Triple</MenuItem>
+            </TextField>
+            <InputLabel>Status</InputLabel>
+            <TextField
+              select
+              disabled={switchToggle}
+              value={status}
+              size="small"
+              label="Status"
+              defaultValue=""
+              fullWidth
+              sx={{ margin: 1, maxWidth: 200 }}
+              onChange={handleStatusChange}
+            >
+              <MenuItem value="Active">Active</MenuItem>
+              <MenuItem value="Awaiting Approval">Awaiting Approval</MenuItem>
+              <MenuItem value="Rejected">Rejected</MenuItem>
+              <MenuItem value="Departed">Departed</MenuItem>
+            </TextField>
+            {(status !== 'Dormant') && <Stack direction={"row"} justifyContent={"space-between"}>
+              <Switch sx={{ marginLeft: '10px' }} onClick={() => { setSwitchToggle(!switchToggle) }}>Save</Switch>
+              <Button size="small" disabled={switchToggle} variant="contained" color="success" onClick={handleApproveUser}>Save</Button>
+            </Stack>}
 
-                </Select>
-              </FormControl>
-              {(status !== 'Dormant') && <Stack direction={"row"} justifyContent={"space-between"}>
-                <Switch sx={{ marginLeft: '10px' }} onClick={() => { setSwitchToggle(!switchToggle) }}>Save</Switch>
-                <Button size="small" disabled={switchToggle} variant="contained" color="success" onClick={handleApproveUser}>Save</Button>
-              </Stack>}
-            </FormControl>
 
           </Grid>
         </Grid>
