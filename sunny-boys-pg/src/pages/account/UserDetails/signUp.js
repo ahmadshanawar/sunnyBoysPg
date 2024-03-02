@@ -28,16 +28,15 @@ const Signup = () => {
   const [passwordError, setPasswordError] = useState('');
   const [otpError, setOtpError] = useState('');
   const [error, setError] = useState('');
-
-  const isNameValid = /^[A-Za-z ]+$/.test(user.name) && user.name.length <= 80;
-  const isMobileValid = /^\d{10}$/.test(user?.mobile?.replace("+91", ""));
-  const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(user.email);
-  const isPasswordValid = user.password.length >= 6;
   const isOtpValid = /^\d{6}$/.test(otp);
 
   const navigate = useNavigate();
 
   const handleUserInfoChange = (field, value) => {
+    const isNameValid = /^[A-Za-z\s]+$/.test(value) && value.length <= 100;
+    const isMobileValid = /^\d{10}$/.test(value.replace("+91", ""));
+    const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+    const isPasswordValid = value.length >= 6;
     setUser(prevUserInfo => ({ ...prevUserInfo, [field]: value }));
 
     switch (field) {
@@ -45,13 +44,13 @@ const Signup = () => {
         setNameError(isNameValid ? '' : 'Invalid name. Please enter only letters and spaces (max 80 characters).');
         break;
       case 'mobile':
-        setMobileError(value.length === 10 ? '' : 'Invalid mobile number. Please enter a 10-digit number.');
+        setMobileError(isMobileValid ? '' : 'Invalid mobile number. Please enter a 10-digit number.');
         break;
       case 'email':
         setEmailError(isEmailValid ? '' : 'Invalid email address. Please enter a valid email.');
         break;
       case 'password':
-        setPasswordError(value.length >= 6 ? '' : 'Invalid password. Please enter at least 6 characters.');
+        setPasswordError(isPasswordValid ? '' : 'Invalid password. Please enter at least 6 characters.');
         break;
       default:
         break;
@@ -92,7 +91,7 @@ const Signup = () => {
         mobile: otpResult.user.phoneNumber,
         isUserRegistered: false,
         paymentHistory: [
-          { amountDue: '0', dueDate: '', status: 'Pending', paidOn: '', crearedAt: format(new Date(), 'yyyy-MM-dd HH:mm:ss')}
+          { amountDue: '0', dueDate: '', status: 'Pending', paidOn: '', crearedAt: format(new Date(), 'yyyy-MM-dd HH:mm:ss') }
         ]
       });
     } catch (error) {
@@ -104,7 +103,7 @@ const Signup = () => {
   };
 
   const handleSignup = async () => {
-    if (!isNameValid || !isMobileValid || !isEmailValid || !isPasswordValid || !isOtpValid || !otpVerified) {
+    if (nameError || mobileError || emailError || passwordError || !isOtpValid || !otpVerified) {
       return;
     }
     setIsLoading(true);
@@ -212,7 +211,7 @@ const Signup = () => {
               color="primary"
               onClick={handleSendOtp}
               sx={{ marginTop: '10px' }}
-              disabled={!isMobileValid || !isEmailValid || !isPasswordValid}
+              disabled={mobileError || emailError || passwordError}
             >
               Send OTP {isLoading && <CircularProgress size={20} thickness={8} sx={{ marginLeft: 2, color: 'white' }} />}
             </Button>

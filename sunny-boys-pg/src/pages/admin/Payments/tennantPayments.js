@@ -64,8 +64,8 @@ const TennantPayments = () => {
       rent: totalRent,
       status: (totalAmountPaid + parseFloat(paymentAmount) >= totalRent) ? 'Paid' : 'Pending',
       dueAmount: dueAmount < 0 ? 0 : dueAmount,
-      dueDate: format(new Date(newDueDate), 'dd-MM-yyyy'),  // Use the determined due date
-      createdAt: format(new Date(), 'yyyy-MM-dd HH:mm:ss'), // Corrected typo in property name
+      dueDate: format(new Date(newDueDate), 'MM-dd-yyyy'),
+      createdAt: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
     };
 
     // Add a new row for the payment
@@ -84,7 +84,7 @@ const TennantPayments = () => {
         rent: totalRent,
         status: 'Pending',
         dueAmount: totalRent,
-        dueDate: format(new Date(nextMonthFormatted), 'dd-MM-yyyy'),
+        dueDate: format(new Date(nextMonthFormatted), 'yyyy-MM-dd'),
         createdAt: format(addSeconds(new Date(), 1), 'yyyy-MM-dd HH:mm:ss')
       });
     }

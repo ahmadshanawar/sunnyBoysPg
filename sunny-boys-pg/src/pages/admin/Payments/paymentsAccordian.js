@@ -21,40 +21,38 @@ const AccordianComponent = ({ tennant, handleAddPayment }) => {
     setExpanded(isExpanded ? panel : false);
   };
 
- const addPayment=()=>{
-  handleAddPayment(tennant,paymentAmount,paymentDate,dueMonth);
-  setPaymentDate();
-  setPaymentAmount();
-  setDueMonth();
- }
+  const addPayment = () => {
+    handleAddPayment(tennant, paymentAmount, paymentDate, dueMonth);
+    setPaymentAmount(0);
+  }
 
   return (
     <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
       <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ backgroundColor: expanded ? '#f0e9e9' : '' }}>
         <Grid container textAlign={"center"}>
-          <Grid item xs={2}>
+          <Grid item xs={4} md={3} lg={2}>
             <Typography fontSize={'14px'} color={'#757575'} fontWeight={'bold'}>Room</Typography>
             <Typography fontSize={'16px'} >{tennant.roomNumber}</Typography>
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={4} md={3} lg={2}>
             <Typography fontSize={'14px'} color={'#757575'} fontWeight={'bold'}>Name</Typography>
             <Typography fontSize={'16px'}>{tennant.name}</Typography>
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={4} md={3} lg={2}>
             <Typography fontSize={'14px'} color={'#757575'} fontWeight={'bold'}>Mobile</Typography>
             <Typography fontSize={'16px'}>{tennant.mobile.slice(3)}</Typography>
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={4} md={3} lg={2}>
             <Typography fontSize={'14px'} color={'#757575'} fontWeight={'bold'}>Checkin Date</Typography>
             <Typography fontSize={'16px'}>{tennant?.checkInDate && format(tennant.checkInDate, 'dd-MMM-yyyy')}</Typography>
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={4} md={3} lg={2}>
             <Typography fontSize={'14px'} color={'#757575'} fontWeight={'bold'}>Status</Typography>
             <Typography fontSize={'16px'}>{tennant.status}</Typography>
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={4} md={3} lg={2}>
             <Typography fontSize={'14px'} color={'#757575'} fontWeight={'bold'}>Due Date</Typography>
-            <Typography fontSize={'16px'}>{tennant?.dueDate && format(tennant.dueDate, 'dd-MMM-yyyy') || tennant?.checkInDate && format(tennant.checkInDate, 'dd-MMM-yyyy')}</Typography>
+            <Typography fontSize={'16px'}>{(tennant?.dueDate && format(tennant.dueDate, 'dd-MMM-yyyy')) || (tennant?.checkInDate && format(tennant.checkInDate, 'dd-MMM-yyyy'))}</Typography>
           </Grid>
         </Grid>
       </AccordionSummary>
@@ -63,8 +61,8 @@ const AccordianComponent = ({ tennant, handleAddPayment }) => {
         <PaymentsTable paymentHistory={tennant?.paymentHistory} />
       </Box>
       <Box style={{ display: 'flex', justifyContent: 'flex-end', gap: '16px' }}>
-        <Grid container spacing={2} alignItems="center" justifyContent="flex-end">
-          <Grid item>
+        <Grid container alignItems="center" justifyContent="center">
+          <Grid item xs={7} md={4} lg={2}>
             <TextField
               variant="outlined"
               type="month"
@@ -80,7 +78,7 @@ const AccordianComponent = ({ tennant, handleAddPayment }) => {
               onChange={(e) => setDueMonth(e.target.value)}
             />
           </Grid>
-          <Grid item>
+          <Grid item xs={7} md={4} lg={2}>
             <TextField
               variant="outlined"
               type="date"
@@ -96,8 +94,9 @@ const AccordianComponent = ({ tennant, handleAddPayment }) => {
               onChange={(e) => setPaymentDate(e.target.value)}
             />
           </Grid>
-          <Grid item mt={1}>
+          <Grid item xs={7} md={4} lg={2} mt={1}>
             <TextField
+              fullWidth
               type='number'
               size='small'
               label="Amount Paid"
@@ -105,8 +104,8 @@ const AccordianComponent = ({ tennant, handleAddPayment }) => {
               value={paymentAmount}
               onChange={e => { setPaymentAmount(e.target.value) }} />
           </Grid>
-          <Grid item mt={1} mr={3}>
-            <Button disabled={!(paymentAmount && paymentDate)} onClick={addPayment} variant="contained" color="primary">Add</Button>
+          <Grid item justifyContent={'flex-end'} xs={7} md={4} lg={2} mt={1} ml={1}>
+            <Button disabled={!(paymentAmount && paymentDate && paymentAmount!==0)} onClick={addPayment} variant="contained" color="primary">Add</Button>
           </Grid>
         </Grid>
       </Box>

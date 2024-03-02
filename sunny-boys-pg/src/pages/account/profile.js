@@ -45,8 +45,10 @@ const Profile = () => {
 
   useEffect(() => {
     getUserInformation()
-  }, []);
-
+  }, [])
+  useEffect(() => {
+    if (user.role === 'Admin') navigate('/dashboard')
+  },[user])
   return ((isLoggedIn && user.isUserRegistered) &&
     <Box sx={{ marginTop: '5%', marginLeft: '3%', marginRight: '3%' }}>
       <Grid container spacing={2}>

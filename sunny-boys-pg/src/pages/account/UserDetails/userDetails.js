@@ -3,9 +3,6 @@ import PinCodeQuery from 'india-pincode-search';
 import {
   Button,
   TextField,
-  FormControl,
-  InputLabel,
-  Select,
   MenuItem,
   Grid,
   Paper,
@@ -80,14 +77,14 @@ const RegistrationForm = () => {
     // Validate on input change
     setValidationErrors({ ...validationErrors, [field]: validateField(field, value) });
   };
-  useEffect(()=>{
+  useEffect(() => {
     if (pinCodeSearchResult?.length > 0 && validationErrors.pinCode === '') {
       setUserData({ ...userData, city: pinCodeSearchResult[0]?.city || pinCodeSearchResult[0]?.village, state: pinCodeSearchResult[0]?.state })
     } else {
       setUserData({ ...userData, city: '', state: '' })
     }
     setPinCodeSearchResult(pinCodeSearchResult)
-  },[pinCodeSearchResult])
+  }, [pinCodeSearchResult])
 
   useEffect(() => {
     if (state?.emailUid) {
@@ -122,7 +119,7 @@ const RegistrationForm = () => {
     if (isFormValid()) {
       try {
         setUserData({ ...userData, isUserRegistered: true })
-        await setDoc(doc(firebaseDb, "Users", userData.emailUid), { ...userData, isUserRegistered: true, dueDate:userData.checkInDate });
+        await setDoc(doc(firebaseDb, "Users", userData.emailUid), { ...userData, isUserRegistered: true, dueDate: userData.checkInDate });
         setIsLoggedIn(true);
 
         navigate('/profile')
@@ -192,6 +189,9 @@ const RegistrationForm = () => {
             </Grid>
             <Grid item xs={8}>
               <TextField
+                inputProps={{
+                  shrink: true
+                }}
                 disabled
                 fullWidth
                 label="State"
@@ -218,16 +218,20 @@ const RegistrationForm = () => {
             error={!!validationErrors.parentMobile && userData.parentMobile !== ''}
             style={{ marginBottom: '20px' }}
           />
-          <FormControl fullWidth style={{ marginBottom: '20px' }}>
-            <InputLabel>Occupation</InputLabel>
-            <Select
-              value={userData.occupation}
-              onChange={(e) => handleInputChange('occupation', e.target.value)}
-            >
-              <MenuItem value="working">Working</MenuItem>
-              <MenuItem value="student">Student</MenuItem>
-            </Select>
-          </FormControl>
+          <TextField
+            select
+            fullWidth
+            label="Occupation"
+            inputProps={{
+              shrink: true
+            }}
+            value={userData.occupation}
+            onChange={(e) => handleInputChange('occupation', e.target.value)}
+            style={{ marginBottom: '20px' }}
+          >
+            <MenuItem value="working">Working</MenuItem>
+            <MenuItem value="student">Student</MenuItem>
+          </TextField>
           <TextField
             fullWidth
             label="College/Organization Name"

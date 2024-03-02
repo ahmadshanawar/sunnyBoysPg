@@ -1,18 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Box,
-  Card,
-  IconButton,
-  Alert,
-  Avatar,
-  Button,
-  CircularProgress,
-  CardMedia
-} from '@mui/material';
+import { Box, Card, Alert, Avatar, Button } from '@mui/material';
 import { useAppStore } from '../../../store';
 import { firebaseStorage } from '../../../firebase';
 import { ref, uploadBytesResumable, getDownloadURL } from "@firebase/storage";
 import imageCompression from 'browser-image-compression';
+
 const FileCard = ({ file, handleInputChange }) => {
   return (
     <>
@@ -63,7 +55,7 @@ const SingleFileUpload = () => {
   const [uploadProgress, setUploadProgress] = useState(0);
 
   const compressionOptions = {
-    maxSizeMB: 0.2,
+    maxSizeMB: 0.1,
     maxWidthOrHeight: 720,
     useWebWorker: true,
   };
@@ -95,7 +87,7 @@ const SingleFileUpload = () => {
         const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         setUploadProgress(progress);
         if (progress === 100) {
-          setFile(selectedFile);
+          setFile(compressedFile);
           setUserData({ ...userData, profilePictureFileName: 'profilePicture' });
           downloadFile("profilePictureFileName");
         }
@@ -111,18 +103,20 @@ const SingleFileUpload = () => {
   };
 
   const downloadFile = async (fileName) => {
-    try {
-      const filePath = `${userData.emailUid}/${userData[fileName]}`;
-      const fileRef = ref(firebaseStorage, filePath);
-      await getDownloadURL(fileRef)
-        .then((downloadUrl) => {
-          setFile(downloadUrl);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    } catch (error) {
-      console.error("Error downloading file:", error);
+    if (userData[fileName]) {
+      try {
+        const filePath = `${userData.emailUid}/${userData[fileName]}`;
+        const fileRef = ref(firebaseStorage, filePath);
+        await getDownloadURL(fileRef)
+          .then((downloadUrl) => {
+            setFile(downloadUrl);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      } catch (error) {
+        console.error("Error downloading file:", error);
+      }
     }
   };
 

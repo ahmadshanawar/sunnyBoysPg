@@ -21,9 +21,9 @@ const TopAppBar = ({ onMenuIconClick, isSidebarOpen }) => {
           marginLeft: '240px', // Adjust based on your sidebar width
         }),
       }}
-    >      
+    >
       <Toolbar>
-      {user?.role === 'Admin' && <IconButton
+        {user?.role === 'Admin' && <IconButton
           edge="start"
           color="inherit"
           aria-label="menu"
@@ -32,9 +32,11 @@ const TopAppBar = ({ onMenuIconClick, isSidebarOpen }) => {
         >
           <MenuIcon />
         </IconButton>}
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          Sunny Boys' PG
-        </Typography>
+        <Link to="/home" style={{ flexGrow:1 ,textDecoration: 'none', color: 'inherit' }}>
+          <Typography variant="h6">
+            Sunny Boys' PG
+          </Typography>
+        </Link>
         <>
           <Link to="/home" style={{ textDecoration: 'none', color: 'inherit' }}>
             <Typography sx={{ marginRight: '10px', letterSpacing: '1px', fontSize: '16px', display: 'inline-flex' }} variant="button">
@@ -51,7 +53,7 @@ const TopAppBar = ({ onMenuIconClick, isSidebarOpen }) => {
           )}
           {/* Login/Logout Link */}
           <Link to={isLoggedIn ? "/logout" : "/login"} style={{ textDecoration: 'none', color: 'inherit' }}>
-            <Typography sx={{letterSpacing: '1px', fontSize: '16px', display: 'inline-flex' }} variant="button">
+            <Typography sx={{ letterSpacing: '1px', fontSize: '16px', display: 'inline-flex' }} variant="button">
               {isLoggedIn ? 'Logout' : 'Login'}
             </Typography>
           </Link>

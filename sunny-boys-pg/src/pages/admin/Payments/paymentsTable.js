@@ -88,7 +88,7 @@ const PaymentsTable = ({ paymentHistory }) => {
                   direction={orderBy === 'paymentDate' ? order : 'asc'}
                   onClick={() => handleSort('paymentDate')}
                 >
-                  <Typography fontWeight="bold">Payment Date</Typography>
+                  <Typography fontWeight="bold">Paid On</Typography>
                 </TableSortLabel>
               </TableCell>
               <TableCell>
@@ -124,8 +124,8 @@ const PaymentsTable = ({ paymentHistory }) => {
             {sortedPaymentHistory?.map((payment, index) => (
               <TableRow key={index} >
                 <TableCell sx={{ fontWeight: 'bold' }}>{payment?.dueDate && format(payment.dueDate, 'dd-MMM-yyyy')}</TableCell>
-                <TableCell sx={{ fontWeight: 'bold' }}>₹{payment?.rent}</TableCell>
-                <TableCell sx={{ fontWeight: 'bold' }}>
+                <TableCell>₹{payment?.rent}</TableCell>
+                <TableCell>
                   <Stack direction={'row'} sx={{ display: 'inline-flex' }}>
                     <Box>
                       {getStatusIcon(payment.status)}
@@ -135,7 +135,7 @@ const PaymentsTable = ({ paymentHistory }) => {
                     </Box>
                   </Stack>
                 </TableCell>
-                <TableCell sx={{ fontWeight: 'bold' }}>{payment?.paymentDate && format(payment.paymentDate, 'dd-MMM-yyyy')}</TableCell>
+                <TableCell>{payment?.paymentDate && format(payment.paymentDate, 'dd-MMM-yyyy')}</TableCell>
                 <TableCell sx={{ fontWeight: 'bold' }}>{payment?.paymentAmount && payment.paymentAmount}</TableCell>
                 <TableCell sx={{ fontWeight: 'bold' }}>₹{payment?.dueAmount && payment.dueAmount}</TableCell>
                 <TableCell sx={{ textAlign: 'end' }}>{payment?.createdAt}</TableCell>

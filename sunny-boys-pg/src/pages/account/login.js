@@ -54,7 +54,7 @@ const Login = () => {
           try {
             const userCredential = await signInWithEmailAndPassword(firebaseAuth, userId, password);
             const userCred = userCredential.user;
-            setUser({ ...user, emailUid: userCred.uid});
+            setUser({ ...user, emailUid: userCred.uid });
             setIsLoggedIn(true);
             navigate('/profile')
           } catch (error) {
@@ -84,7 +84,7 @@ const Login = () => {
   return (
     <CenteredContainer component="main" maxWidth="xs">
       <CenteredPaper elevation={3}>
-        {error && <ClosableAlert messege={error} severity={"error"}/>}
+        {error && <ClosableAlert messege={error} severity={"error"} />}
         <Typography component="h1" variant="h5">
           Login
         </Typography>
@@ -120,25 +120,25 @@ const Login = () => {
           {/* Add a similar TextField for password or mobile, depending on your authentication method */}
           <SubmitButton
             variant="contained"
-            sx={{backgroundColor:'#251a33', marginTop:'5px'}}
+            sx={{ backgroundColor: '#251a33', marginTop: '5px' }}
             fullWidth
             onClick={handleLogin}
           >
             Login
-          </SubmitButton>          
+          </SubmitButton>
           <Button
             variant="contained"
-            sx={{backgroundColor:'#251a33', marginTop:'5px'}}
+            sx={{ backgroundColor: '#251a33', marginTop: '5px' }}
             fullWidth
-            onClick={() => navigate('/signUp') }
+            onClick={() => navigate('/signUp')}
           >
             Register
           </Button>
           <Button
             variant="contained"
-           sx={{backgroundColor:'#251a33', marginTop:'5px'}}
+            sx={{ backgroundColor: '#251a33', marginTop: '5px' }}
             fullWidth
-            onClick={() => navigate('/') }
+            onClick={() => navigate('/')}
           >
             Home
           </Button>
