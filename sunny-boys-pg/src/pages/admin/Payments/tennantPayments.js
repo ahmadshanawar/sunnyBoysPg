@@ -90,7 +90,6 @@ const TennantPayments = () => {
     }
 
     try {
-      debugger;
       const userRef = doc(firebaseDb, "Users", tennant.uid);
       await setDoc(userRef, {
         ...tennant,

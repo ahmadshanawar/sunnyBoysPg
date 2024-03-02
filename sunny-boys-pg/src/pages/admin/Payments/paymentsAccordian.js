@@ -30,7 +30,7 @@ const AccordianComponent = ({ tennant, handleAddPayment }) => {
     <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
       <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ backgroundColor: expanded ? '#f0e9e9' : '' }}>
         <Grid container textAlign={"center"}>
-          <Grid item xs={4} md={3} lg={2}>
+          <Grid item xs={4} md={3} lg={2} mb={2}>
             <Typography fontSize={'14px'} color={'#757575'} fontWeight={'bold'}>Room</Typography>
             <Typography fontSize={'16px'} >{tennant.roomNumber}</Typography>
           </Grid>

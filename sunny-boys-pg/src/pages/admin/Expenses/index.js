@@ -31,6 +31,7 @@ const ExpenseTracker = () => {
   const [isAddExpenseModalOpen, setIsAddExpenseModalOpen] = useState(false);
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
+  const [expenseDate, setExpenseDate] = useState('')
 
   const handleFromDateChange = (date) => {
     setFromDate(date);
@@ -70,7 +71,8 @@ const ExpenseTracker = () => {
       createdAt: format(new Date(), "yyyy-MM-dd HH:mm:ss"),
       deleted: false,
       paidBy: expensePaidBy,
-      expenseType: expenseType
+      expenseType: expenseType,
+      expenseDate:format(new Date(expenseDate), "yyyy-MM-dd"),
     };
     try {
       setLoading(true);
@@ -132,8 +134,7 @@ const ExpenseTracker = () => {
 
       // Filter expenses based on createdAt field
       const filteredExpenses = expensesData.filter(item => {
-        const createdAtDate = parseCustomDate(item.createdAt);
-        return isWithinInterval(createdAtDate, { start: fromDateObj, end: toDateObj });
+        return isWithinInterval(parseCustomDate(item.createdAt), { start: fromDateObj, end: toDateObj });
       });
 
       setExpenses(filteredExpenses);
@@ -172,8 +173,8 @@ const ExpenseTracker = () => {
             {addSuccess && <ClosableAlert message="Expenses Added" severity="success" />}
           </Box>
           <Divider sx={{ margin: '20px' }} />
-          <Grid container justifyContent="flex-start" alignItems="center" style={{ display: 'inline-flex' }}>
-            <Grid item xs={10} sm={4}>
+          <Grid container justifyContent="flex-start" alignItems="center" style={{ display: 'inline-flex', marginLeft: 20 }}>
+            <Grid item xs={12} sm={4} md={4} lg={4} >
               <DateSelector
                 fromDate={fromDate}
                 toDate={toDate}
@@ -181,33 +182,33 @@ const ExpenseTracker = () => {
                 onToDateChange={handleToDateChange}
               />
             </Grid>
-            <Grid item xs={1} sm={.35}>
+            <Grid item xs={1} sm={1} md={1} lg={1} >
               <IconButton variant="outlined" onClick={handleSearchClick}>
                 <LensIcon sx={{ fontSize: '30px' }} />
               </IconButton>
             </Grid>
-            <Grid item xs={1} sm={.35}>
+            <Grid item xs={1} sm={2} md={4} lg={6}  >
               <IconButton variant="outlined" onClick={handleResetClick}>
                 <ResetIcon sx={{ fontSize: '30px' }} />
               </IconButton>
             </Grid>
           </Grid>
           <Divider sx={{ margin: '20px' }} />
-          <div style={{ marginTop: '20px',   maxHeight:`${window.screen.height*.5}px`, overflow:'scroll'}}>
+          <div style={{ marginTop: '20px', maxHeight: `${window.screen.height * .5}px`, overflow: 'scroll' }}>
             {expenses?.length > 0 && expenses.map((expense, index) => (
               <Paper key={index} sx={{ margin: '8px', padding: 1 }}>
                 <Grid container key={index}>
-                  <Grid item xs={12} sm={2}>
+                  <Grid item xs={4} sm={2}>
                     <Typography variant="body1" fontSize={'14px'}>{expense?.createdAt?.slice(0, 10)}</Typography>
                     <Typography variant="body1" fontSize={'12px'}>{expense?.createdAt?.slice(11, expense?.createdAt.length)}</Typography>
                   </Grid>
-                  <Grid item xs={12} sm={2}>
+                  <Grid item xs={2.5} sm={2}>
                     <Typography variant="subtitle1" style={{ fontWeight: 'bold' }}>{expense.name}</Typography>
                   </Grid>
-                  <Grid item xs={12} sm={3}>
+                  <Grid item xs={3} sm={3}>
                     <Typography variant="body1">₹{expense.amount}</Typography>
                   </Grid>
-                  <Grid item xs={12} sm={4}>
+                  <Grid item xs={2.5} sm={4}>
                     <Typography variant="body1">{expense.paidBy}</Typography>
                   </Grid>
                   <Grid item xs={12} sm={1} container justifyContent="flex-end">
@@ -250,6 +251,18 @@ const ExpenseTracker = () => {
           <Divider />
           <DialogContent>
             <Container>
+              <TextField
+                size="small"
+                fullWidth
+                type="date"
+                label="Date"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                value={expenseDate}
+                onChange={e => setExpenseDate(e.target.value)}
+                style={{ marginRight: '6px' , marginBottom:17}}
+              />
               <Select
                 sx={{ marginBottom: 2 }}
                 value={expenseType}

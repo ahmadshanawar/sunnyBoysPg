@@ -5,46 +5,42 @@ import { firebaseStorage } from '../../../firebase';
 import { ref, uploadBytesResumable, getDownloadURL } from "@firebase/storage";
 import imageCompression from 'browser-image-compression';
 
-const FileCard = ({ file, handleInputChange }) => {
-  return (
-    <>
-      <Card
-        sx={{
-          width: 100,
-          height: 100,
-          borderRadius: '50%',
-          overflow: 'hidden',
-        }}
-      >
-        {file ? (
-          <div style={{ position: 'relative' }}>
-            <img
-              src={file}
-              component='img'
-              style={{ width: '100%', height: '100%', objectFit: 'fill' }}
-            />
-          </div>
-        ) : (
-          <Avatar
-            sx={{
-              width: 100,
-              height: 100,
-            }}
-            onClick={handleInputChange}
-          >
-          </Avatar>
-        )}
+const FileCard = ({ file, handleInputChange }) =>
+  <>
+    <Card
+      sx={{
+        width: 100,
+        height: 100,
+        borderRadius: '50%',
+        overflow: 'hidden',
+      }}
+    >
+      {file ? (
+        <div style={{ position: 'relative' }}>
+          <img
+            src={file}
+            component='img'
+            style={{ width: '100%', height: '100%', objectFit: 'fill' }}
+          />
+        </div>
+      ) : (
+        <Avatar
+          sx={{
+            width: 100,
+            height: 100,
+          }}
+          onClick={handleInputChange}
+        >
+        </Avatar>
+      )}
 
-      </Card>
-      {file &&
-        <Box sx={{ alignItems: 'center' }}>
-          <Button size="small" onClick={handleInputChange}>Edit Picture</Button>
-        </Box>
-      }
-    </>
-  )
-};
-
+    </Card>
+    {file &&
+      <Box sx={{ alignItems: 'center' }}>
+        <Button size="small" onClick={handleInputChange}>Edit Picture</Button>
+      </Box>
+    }
+  </>;
 
 const SingleFileUpload = () => {
   const userData = useAppStore((state) => state.user);
