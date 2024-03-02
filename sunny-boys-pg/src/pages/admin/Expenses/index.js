@@ -67,7 +67,7 @@ const ExpenseTracker = () => {
       id: generateExpenseId(),
       name: expenseItem,
       amount: expenseAmount,
-      createdAt: format(new Date(), "dd-MM-yyyy'T'HH:mm:ss"),
+      createdAt: format(new Date(), "yyyy-MM-dd HH:mm:ss"),
       deleted: false,
       paidBy: expensePaidBy,
       expenseType: expenseType
@@ -116,7 +116,7 @@ const ExpenseTracker = () => {
   };
   function parseCustomDate(dateString) {
     const [day, month, yearAndTime] = dateString.split("-");
-    const [year, time] = yearAndTime.split("T");
+    const [year, time] = yearAndTime.split(" ");
     const [hours, minutes, seconds] = time.split(":");
     return new Date(year, month - 1, day, hours, minutes, seconds);
   }
@@ -192,10 +192,8 @@ const ExpenseTracker = () => {
               </IconButton>
             </Grid>
           </Grid>
-
-
           <Divider sx={{ margin: '20px' }} />
-          <div style={{ marginTop: '20px' }}>
+          <div style={{ marginTop: '20px',   maxHeight:`${window.screen.height*.5}px`, overflow:'scroll'}}>
             {expenses?.length > 0 && expenses.map((expense, index) => (
               <Paper key={index} sx={{ margin: '8px', padding: 1 }}>
                 <Grid container key={index}>

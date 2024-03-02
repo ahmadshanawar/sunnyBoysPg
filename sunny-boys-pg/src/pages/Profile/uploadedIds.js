@@ -64,7 +64,7 @@ const UploadedIds = (props) => {
      <Box sx={{ display: 'inline-flex' }}>
         <CloudQueueIcon sx={{ fontSize: 35, color: '#a597ad' }} />
         <Typography variant="h1" sx={{ fontSize: "18px", fontWeight: "bold", margin: "10px" }}>
-          Uploaded Documents
+          Uploaded Documents : {user.adhaarNumber}
         </Typography>
       </Box>
 

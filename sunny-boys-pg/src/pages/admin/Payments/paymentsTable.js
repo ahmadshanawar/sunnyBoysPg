@@ -18,7 +18,7 @@ import WarningIcon from '@mui/icons-material/Warning';
 import { format } from 'date-fns';
 
 const PaymentsTable = ({ paymentHistory }) => {
-  const [orderBy, setOrderBy] = useState('dueDate');
+  const [orderBy, setOrderBy] = useState('createdAt');
   const [order, setOrder] = useState('asc');
   
   // Sort paymentHistory based on createdAt on initial load
@@ -47,7 +47,6 @@ const PaymentsTable = ({ paymentHistory }) => {
       return <WarningIcon style={{ color: 'red' }} />;
     }
   };
-
   return (
     <Paper elevation={3} sx={{ padding: 1, borderRadius: '20px', marginBottom: '2px', minHeight: 290 }}>
       <Divider light sx={{ marginBottom: '2px' }} />
@@ -124,7 +123,7 @@ const PaymentsTable = ({ paymentHistory }) => {
           <TableBody>
             {sortedPaymentHistory?.map((payment, index) => (
               <TableRow key={index} >
-                <TableCell sx={{ fontWeight: 'bold' }}>{payment?.dueDate}</TableCell>
+                <TableCell sx={{ fontWeight: 'bold' }}>{payment?.dueDate && format(payment.dueDate, 'dd-MMM-yyyy')}</TableCell>
                 <TableCell sx={{ fontWeight: 'bold' }}>₹{payment?.rent}</TableCell>
                 <TableCell sx={{ fontWeight: 'bold' }}>
                   <Stack direction={'row'} sx={{ display: 'inline-flex' }}>
@@ -136,7 +135,7 @@ const PaymentsTable = ({ paymentHistory }) => {
                     </Box>
                   </Stack>
                 </TableCell>
-                <TableCell sx={{ fontWeight: 'bold' }}>{payment?.paymentDate && payment.paymentDate}</TableCell>
+                <TableCell sx={{ fontWeight: 'bold' }}>{payment?.paymentDate && format(payment.paymentDate, 'dd-MMM-yyyy')}</TableCell>
                 <TableCell sx={{ fontWeight: 'bold' }}>{payment?.paymentAmount && payment.paymentAmount}</TableCell>
                 <TableCell sx={{ fontWeight: 'bold' }}>₹{payment?.dueAmount && payment.dueAmount}</TableCell>
                 <TableCell sx={{ textAlign: 'end' }}>{payment?.createdAt}</TableCell>

@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { query, collection, where, getDocs } from "@firebase/firestore";
 import { firebaseDb } from "../../../firebase";
-import { Paper, Typography, Grid, Divider, Container, Card } from "@mui/material";
+import { Paper, Typography, Grid, Divider, Container, Box } from "@mui/material";
 import PaymentsAccordian from "./paymentsAccordian";
 import { doc, setDoc } from '@firebase/firestore';
-import { format, addMonths } from 'date-fns';
+import { format, addMonths, addSeconds } from 'date-fns';
 import ClosableAlert from "../../../common/closableAlert";
 
 const TennantPayments = () => {
@@ -13,13 +13,14 @@ const TennantPayments = () => {
 
   const getTennents = async () => {
     try {
-      setTennants([])
       let data = [];
-      setTennants([])
       const q = query(collection(firebaseDb, "Users"), where("role", "==", 'READ'), where("status", "==", "Active"));
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((doc) => {
         data.push(doc.data());
+      });
+      data.sort((a, b) => {
+        return a.roomNumber - b.roomNumber;
       });
       setTennants(data);
     } catch (err) {
@@ -28,8 +29,7 @@ const TennantPayments = () => {
   }
 
   const handleAddPayment = async (tennant, paymentAmount, paymentDate, dueMonth) => {
-    const currentDate = new Date();
-    const currentMonth = format(currentDate, 'yyyy-MM'); // Get current month in YYYY-MM format
+    const currentDate = new Date();  
     let totalAmountPaid = 0;
     let isNewMonth = true; // Set isNewMonth to true initially
 
@@ -64,7 +64,7 @@ const TennantPayments = () => {
       rent: totalRent,
       status: (totalAmountPaid + parseFloat(paymentAmount) >= totalRent) ? 'Paid' : 'Pending',
       dueAmount: dueAmount < 0 ? 0 : dueAmount,
-      dueDate: newDueDate, // Use the determined due date
+      dueDate: format(new Date(newDueDate), 'dd-MM-yyyy'),  // Use the determined due date
       createdAt: format(new Date(), 'yyyy-MM-dd HH:mm:ss'), // Corrected typo in property name
     };
 
@@ -84,17 +84,19 @@ const TennantPayments = () => {
         rent: totalRent,
         status: 'Pending',
         dueAmount: totalRent,
-        dueDate: nextMonthFormatted,
-        createdAt: format(new Date(), 'yyyy-MM-dd HH:mm:ss'), // Corrected typo in property name
+        dueDate: format(new Date(nextMonthFormatted), 'dd-MM-yyyy'),
+        createdAt: format(addSeconds(new Date(), 1), 'yyyy-MM-dd HH:mm:ss')
       });
     }
 
     try {
+      debugger;
       const userRef = doc(firebaseDb, "Users", tennant.uid);
       await setDoc(userRef, {
         ...tennant,
         paymentHistory: tennant.paymentHistory,
       });
+      setPaymentUpdated(true)
       console.log('successfully updated');
       getTennents()
     } catch (err) {
@@ -112,7 +114,7 @@ const TennantPayments = () => {
       <Typography variant="h4">Payments</Typography>
       {paymentUpdated && <ClosableAlert message="Payment has been successfully updated" severity={'success'} />}
       <Divider />
-      <Card elevation={3} sx={{ padding: 2, minHeight: '80vh' }} >
+      <Box sx={{ padding: 2, minHeight: '80vh' }} >
         <Grid>
           <Grid item xs={12}>
             <Paper>
@@ -126,7 +128,7 @@ const TennantPayments = () => {
             </Paper>
           </Grid>
         </Grid>
-      </Card>
+      </Box>
     </Container>
   )
 }

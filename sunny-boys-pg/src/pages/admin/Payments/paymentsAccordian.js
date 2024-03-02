@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Accordion, AccordionSummary, Box, Typography, Grid, TextField, Button, Divider } from "@mui/material";
 import PaymentsTable from "./paymentsTable";
+import { format } from "date-fns";
 
 const AccordianComponent = ({ tennant, handleAddPayment }) => {
   const [expanded, setExpanded] = useState(false);
@@ -21,7 +22,10 @@ const AccordianComponent = ({ tennant, handleAddPayment }) => {
   };
 
  const addPayment=()=>{
-  handleAddPayment(tennant,paymentAmount,paymentDate,dueMonth)
+  handleAddPayment(tennant,paymentAmount,paymentDate,dueMonth);
+  setPaymentDate();
+  setPaymentAmount();
+  setDueMonth();
  }
 
   return (
@@ -42,7 +46,7 @@ const AccordianComponent = ({ tennant, handleAddPayment }) => {
           </Grid>
           <Grid item xs={2}>
             <Typography fontSize={'14px'} color={'#757575'} fontWeight={'bold'}>Checkin Date</Typography>
-            <Typography fontSize={'16px'}>{tennant?.checkInDate}</Typography>
+            <Typography fontSize={'16px'}>{tennant?.checkInDate && format(tennant.checkInDate, 'dd-MMM-yyyy')}</Typography>
           </Grid>
           <Grid item xs={2}>
             <Typography fontSize={'14px'} color={'#757575'} fontWeight={'bold'}>Status</Typography>
@@ -50,7 +54,7 @@ const AccordianComponent = ({ tennant, handleAddPayment }) => {
           </Grid>
           <Grid item xs={2}>
             <Typography fontSize={'14px'} color={'#757575'} fontWeight={'bold'}>Due Date</Typography>
-            <Typography fontSize={'16px'}>{tennant?.checkInDate}</Typography>
+            <Typography fontSize={'16px'}>{tennant?.dueDate && format(tennant.dueDate, 'dd-MMM-yyyy') || tennant?.checkInDate && format(tennant.checkInDate, 'dd-MMM-yyyy')}</Typography>
           </Grid>
         </Grid>
       </AccordionSummary>

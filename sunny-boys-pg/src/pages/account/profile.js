@@ -8,7 +8,7 @@ import AddressDetails from "../Profile/addressDetails";
 import UploadedIds from "../Profile/uploadedIds";
 import BasicDetails from "../Profile/basicDetails";
 import PaymentDetails from "../Profile/paymentDetails";
-import { useNavigate, useLocation } from "react-router";
+import { useNavigate } from "react-router";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -22,8 +22,7 @@ const Profile = () => {
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
         const result = docSnap.data();
-        if(!result.isUserRegistered)
-        {
+        if (!result.isUserRegistered) {
           navigate('/register')
         }
         setUser(result);

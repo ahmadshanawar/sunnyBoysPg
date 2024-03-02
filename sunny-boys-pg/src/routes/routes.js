@@ -10,6 +10,7 @@ import Dashboard from "../pages/admin/dashboard";
 import Lobby from "../pages/admin/Lobby/lobby";
 import TennantPayments from "../pages/admin/Payments/tennantPayments";
 import ExpenseTracker from "../pages/admin/Expenses";
+import Occupancy from "../pages/account/Occupancy";
 const router = createBrowserRouter([
     {
         path: "/",
@@ -69,6 +70,12 @@ const router = createBrowserRouter([
         path: '/expenseTracker',
         element: <Layout>
             <ExpenseTracker/>
+        </Layout>
+    },
+    {
+        path: '/occupancy',
+        element: <Layout>
+            <Occupancy/>
         </Layout>
     },
 
