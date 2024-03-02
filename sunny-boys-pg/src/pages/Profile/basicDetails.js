@@ -166,7 +166,7 @@ const BasicDetails = () => {
             id="Checked In Date"
             label="Checked In Date"
             name="Checked In Date"
-            value={user.checkInDate && format(parseISO(user?.checkInDate), 'dd-mm-yyyy')}
+            value={user.checkInDate && format((user?.checkInDate), 'dd-MMM-yyyy')}
           // onChange={(e) => setPassword(e.target.value)}
           />
         </Grid>
@@ -180,7 +180,7 @@ const BasicDetails = () => {
             id="Tentative Checkout Date"
             label="Tentative Checkout Date"
             name="Tentative Checkout Date"
-            value={user.checkOutDate && format(parseISO(user?.checkOutDate), 'dd-mm-yyyy')}
+            value={user.checkOutDate && format((user?.checkOutDate), 'dd-MMM-yyyy')}
           // onChange={(e) => setPassword(e.target.value)}
           />
         </Grid>

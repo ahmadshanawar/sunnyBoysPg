@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import { Container, Box, Typography, CircularProgress } from '@mui/material';
+import { Container, Typography, CircularProgress, Grid } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import PhoneIcon from '@mui/icons-material/Phone';
 import EmailIcon from '@mui/icons-material/Email';
@@ -12,7 +12,7 @@ import { setDoc, doc } from '@firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../../../store';
 import ClosableAlert from '../../../common/closableAlert';
-import { format } from 'date-fns'
+import { format } from 'date-fns';
 
 const Signup = () => {
   const setUser = useAppStore(state => state.setUser);
@@ -27,7 +27,7 @@ const Signup = () => {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [otpError, setOtpError] = useState('');
-  const [error, setError] = useState('')
+  const [error, setError] = useState('');
 
   const isNameValid = /^[A-Za-z ]+$/.test(user.name) && user.name.length <= 80;
   const isMobileValid = /^\d{10}$/.test(user?.mobile?.replace("+91", ""));
@@ -38,52 +38,47 @@ const Signup = () => {
   const navigate = useNavigate();
 
   const handleUserInfoChange = (field, value) => {
-    setUser((prevUserInfo) => ({ ...prevUserInfo, [field]: value, }));
+    setUser(prevUserInfo => ({ ...prevUserInfo, [field]: value }));
 
     switch (field) {
       case 'name':
-        setNameError('');
+        setNameError(isNameValid ? '' : 'Invalid name. Please enter only letters and spaces (max 80 characters).');
         break;
       case 'mobile':
-        setMobileError('');
+        setMobileError(value.length === 10 ? '' : 'Invalid mobile number. Please enter a 10-digit number.');
         break;
       case 'email':
-        setEmailError('');
+        setEmailError(isEmailValid ? '' : 'Invalid email address. Please enter a valid email.');
         break;
       case 'password':
-        setPasswordError('');
+        setPasswordError(value.length >= 6 ? '' : 'Invalid password. Please enter at least 6 characters.');
         break;
       default:
         break;
     }
-    setUser({ ...user, [field]: value })
+    setUser({ ...user, [field]: value });
   };
 
-  const handleOtpChange = (value) => {
+  const handleOtpChange = value => {
     setOtp(value);
     setOtpError('');
   };
 
-
   const handleSendOtp = async () => {
-    const appVerifier = new RecaptchaVerifier(firebaseAuth, "recapcha", { size: "invisible" })
-    setIsLoading(false);
-    if (user?.mobile) {
-      setIsLoading(true)
-      try {
-        const confirmationResult = await signInWithPhoneNumber(firebaseAuth, `+91${user.mobile}`, appVerifier)
-        setOtpConfirmation(confirmationResult);
-        setIsOtpSent(true);
-        setIsLoading(false);
-      } catch (error) {
-        setIsLoading(false);
-        setError(error.message)
-      }
+    const appVerifier = new RecaptchaVerifier(firebaseAuth, "recapcha", { size: "invisible" });
+    setIsLoading(true);
+    try {
+      const confirmationResult = await signInWithPhoneNumber(firebaseAuth, `+91${user.mobile}`, appVerifier);
+      setOtpConfirmation(confirmationResult);
+      setIsOtpSent(true);
+    } catch (error) {
+      setError(error.message);
     }
+    setIsLoading(false);
   };
 
   const handleVerifyOtp = async () => {
-    setIsLoading(true)
+    setIsLoading(true);
     try {
       const otpResult = await otpConfirmation.confirm(otp);
       setOtpVerified(true);
@@ -97,86 +92,38 @@ const Signup = () => {
         mobile: otpResult.user.phoneNumber,
         isUserRegistered: false,
         paymentHistory: [
-          { amountDue: '0', dueDate: format(new Date(), 'dd-mm-yyyy'), status: 'Pending', paidOn: format(new Date(), 'dd-mm-yyyy'), crearedAt: new Date() }
+          { amountDue: '0', dueDate: '', status: 'Pending', paidOn: '', crearedAt: format(new Date(), 'yyyy-MM-dd HH:mm:ss')}
         ]
-      })
-      setIsLoading(false)
+      });
     } catch (error) {
-      setError(error.message)
+      setError(error.message);
       setOtpError('Invalid OTP');
       setOtpVerified(false);
-      setIsLoading(false)
     }
+    setIsLoading(false);
   };
 
   const handleSignup = async () => {
-    if (!isNameValid) {
-      setNameError('Invalid name. Please enter only letters and spaces (max 80 characters).');
+    if (!isNameValid || !isMobileValid || !isEmailValid || !isPasswordValid || !isOtpValid || !otpVerified) {
       return;
     }
-
-    if (!isMobileValid) {
-      setMobileError('Invalid mobile number. Please enter a 10-digit number.');
-      return;
+    setIsLoading(true);
+    try {
+      const userCredential = await createUserWithEmailAndPassword(firebaseAuth, user.email, user.password);
+      const current_user = userCredential.user;
+      await setDoc(doc(firebaseDb, "Users", current_user.uid), { ...user, emailUid: current_user.uid });
+      setUser({ ...user, emailUid: current_user.uid });
+      navigate('/register');
+    } catch (error) {
+      setError(error.message);
     }
-
-    if (!isEmailValid) {
-      setEmailError('Invalid email address. Please enter a valid email.');
-      return;
-    }
-
-    if (!isPasswordValid) {
-      setPasswordError('Invalid password. Please enter at least 6 characters.');
-      return;
-    }
-
-    if (!isOtpValid) {
-      setOtpError('Invalid OTP. Please enter a 6-digit OTP.');
-      return;
-    }
-    if (otpVerified) {
-      try {
-        setIsLoading(true);
-        const userCredential = await createUserWithEmailAndPassword(firebaseAuth, user.email, user.password);
-        const current_user = userCredential.user;
-        await setDoc(doc(firebaseDb, "Users", current_user.uid), { ...user, emailUid: current_user.uid });
-        setUser({ ...user, emailUid: current_user.uid })
-        navigate('/register');
-        setIsLoading(false);
-
-      } catch (error) {
-        setIsLoading(false);
-        console.log(error)
-        setError(error.message);
-      }
-    }
+    setIsLoading(false);
   };
-
-  const isSignupDisabled =
-    !isNameValid || !isMobileValid || !isEmailValid || !isPasswordValid || !isOtpValid;
 
   return (
     <Container>
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          height: '100vh',
-          backgroundColor: '#f4f4f4',
-        }}
-      >
-        <Box
-          sx={{
-            backgroundColor: 'white',
-            padding: '20px',
-            borderRadius: '8px',
-            boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)',
-            width: '300px',
-            textAlign: 'center',
-          }}
-        >
+      <Grid container sx={{ justifyContent: 'center' }} >
+        <Grid item sm={12} md={4} lg={3}>
           {isOtpSent && <ClosableAlert message="Otp has been sent to your mobile number" severity="success" />}
           {otpVerified && <ClosableAlert message="Otp Verified Click Sign Up" severity="success" />}
           {error && <ClosableAlert message={error} severity="error" />}
@@ -189,7 +136,7 @@ const Signup = () => {
             fullWidth
             margin="normal"
             value={user.name}
-            onChange={(e) => handleUserInfoChange('name', e.target.value)}
+            onChange={e => handleUserInfoChange('name', e.target.value)}
             error={!!nameError}
             helperText={nameError}
             InputProps={{
@@ -202,7 +149,7 @@ const Signup = () => {
             fullWidth
             margin="normal"
             value={user.mobile}
-            onChange={(e) => handleUserInfoChange('mobile', e.target.value)}
+            onChange={e => handleUserInfoChange('mobile', e.target.value)}
             error={!!mobileError}
             helperText={mobileError}
             InputProps={{
@@ -215,7 +162,7 @@ const Signup = () => {
             fullWidth
             margin="normal"
             value={user.email}
-            onChange={(e) => handleUserInfoChange('email', e.target.value)}
+            onChange={e => handleUserInfoChange('email', e.target.value)}
             error={!!emailError}
             helperText={emailError}
             InputProps={{
@@ -229,7 +176,7 @@ const Signup = () => {
             fullWidth
             margin="normal"
             value={user.password}
-            onChange={(e) => handleUserInfoChange('password', e.target.value)}
+            onChange={e => handleUserInfoChange('password', e.target.value)}
             error={!!passwordError}
             helperText={passwordError}
             InputProps={{
@@ -244,7 +191,7 @@ const Signup = () => {
                 fullWidth
                 margin="normal"
                 value={otp}
-                onChange={(e) => handleOtpChange(e.target.value)}
+                onChange={e => handleOtpChange(e.target.value)}
                 error={!!otpError}
                 helperText={otpError}
               />
@@ -253,7 +200,7 @@ const Signup = () => {
                 color="primary"
                 onClick={handleVerifyOtp}
                 sx={{ marginTop: '10px', marginBottom: '10px' }}
-                disabled={!otp}
+                disabled={!otp || otp.length !== 6}
               >
                 Verify OTP {isLoading && <CircularProgress size={20} thickness={8} sx={{ marginLeft: 2, color: 'white' }} />}
               </Button>
@@ -277,13 +224,13 @@ const Signup = () => {
               color="primary"
               onClick={handleSignup}
               sx={{ marginTop: '10px' }}
-              disabled={isSignupDisabled}
+              disabled={isLoading}
             >
               Sign Up {isLoading && <CircularProgress size={20} thickness={8} sx={{ marginLeft: 2, color: 'white' }} />}
             </Button>
           )}
-        </Box>
-      </Box>
+        </Grid>
+      </Grid>
       <div id="recapcha" style={{ display: 'none' }}></div>
     </Container>
   );

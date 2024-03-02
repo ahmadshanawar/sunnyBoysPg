@@ -17,6 +17,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import WarningIcon from '@mui/icons-material/Warning';
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import { useAppStore } from '../../store';
+import { format } from 'date-fns';
 
 const PaymentDetails = () => {
   const paymentHistory = useAppStore(state => state.user?.paymentHistory)
@@ -44,7 +45,6 @@ const PaymentDetails = () => {
       return <WarningIcon style={{ color: 'red' }} />;
     }
   };
-
   return (
     <Paper elevation={3} sx={{ padding: 2, borderRadius: '20px', marginBottom: '20px', minHeight: 290 }}>
       <Box sx={{ display: 'inline-flex' }}>
@@ -98,8 +98,9 @@ const PaymentDetails = () => {
           </TableHead>
           <TableBody>
             {sortedPaymentHistory?.map((payment, index) => (
+              
               <TableRow key={index}>
-                <TableCell>{payment?.dueDate}</TableCell>
+                <TableCell>{payment?.dueDate && format(payment.dueDate, 'dd-MMM-yyyy')}</TableCell>
                 <TableCell>{payment?.paymentAmount}</TableCell>
                 <TableCell>
                   <Stack direction={'row'} sx={{display:'inline-flex'}}>

@@ -5,15 +5,15 @@ import {
   MenuItem, Accordion, AccordionSummary, AccordionDetails, Stack,
   Typography, Grid, TextField, Select, Button, Card, Divider, InputLabel, FormControl, Switch
 } from "@mui/material";
-import { format, addMonths } from 'date-fns';
+import { format } from 'date-fns';
 
 const AccordianComponent = ({ tennant, handleSave }) => {
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(false);                                    
   const [rentAmount, setRentAmount] = useState(tennant?.finalizedRent);
   const [checkInDate, setCheckInDate] = useState(tennant?.checkInDate);
   const [roomNumber, setRoomNumber] = useState(tennant?.roomNumber);
   const [occupancyType, setOccupancyType] = useState(tennant?.occupancyType);
-  const [status, setStatus] = useState(tennant.status)
+  const [status, setStatus] = useState(tennant?.status)
   const [switchToggle, setSwitchToggle] = useState(true)
   const handleApproveUser = () => {
     handleSave(
@@ -57,19 +57,19 @@ const AccordianComponent = ({ tennant, handleSave }) => {
     <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <Grid container textAlign={"center"}>
-          <Grid item xs={2}>
+          <Grid item xs={6} md={2} lg={2}>
             <Typography fontSize={'14px'} color={'#757575'} fontWeight={'bold'}>Name</Typography>
             <Typography fontSize={'16px'}>{tennant.name}</Typography>
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={6} md={2} lg={2}>
             <Typography fontSize={'14px'} color={'#757575'} fontWeight={'bold'}>Mobile</Typography>
             <Typography fontSize={'16px'}>{tennant.mobile.slice(3)}</Typography>
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={6} md={3} lg={3}>
             <Typography fontSize={'14px'} color={'#757575'} fontWeight={'bold'}>Checkin Date</Typography>
             <Typography fontSize={'16px'}>{format(tennant?.checkInDate, 'yyyy-MMM-dd')}</Typography>
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={6} md={2} lg={2}>
             <Typography fontSize={'14px'} color={'#757575'} fontWeight={'bold'}>Status</Typography>
             <Typography fontSize={'16px'}>{tennant.status}</Typography>
           </Grid>
@@ -159,7 +159,7 @@ const AccordianComponent = ({ tennant, handleSave }) => {
                 <InputLabel>Status</InputLabel>
                 <Select
                   disabled={switchToggle}
-                  value={tennant?.status}
+                  value={status}
                   size="small"
                   label="Status"
                   defaultValue=""
@@ -174,7 +174,7 @@ const AccordianComponent = ({ tennant, handleSave }) => {
 
                 </Select>
               </FormControl>
-              {(tennant?.status !== 'Dormant') && <Stack direction={"row"} justifyContent={"space-between"}>
+              {(status !== 'Dormant') && <Stack direction={"row"} justifyContent={"space-between"}>
                 <Switch sx={{ marginLeft: '10px' }} onClick={() => { setSwitchToggle(!switchToggle) }}>Save</Switch>
                 <Button size="small" disabled={switchToggle} variant="contained" color="success" onClick={handleApproveUser}>Save</Button>
               </Stack>}

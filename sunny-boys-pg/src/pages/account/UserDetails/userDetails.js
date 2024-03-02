@@ -57,16 +57,19 @@ const RegistrationForm = () => {
   };
 
   const validateAdhaarNumber = (value) => {
-    const isValid = /^\d{12}$/.test(value)
-    //TODO
-    //&& validator.isValidNumber(value);
+    const isValid = /^\d{12}$/.test(value) && validator.isValidNumber(value);
     return isValid ? '' : 'Adhaar number must be a Valid 12-digit number';
   };
 
   const handleInputChange = (field, value) => {
     if (field === 'pinCode' && value?.length === 6) {
-      let result = PinCodeQuery.search(value);
-      setPinCodeSearchResult(result)
+      let pinCodeSearchResult = PinCodeQuery.search(value);
+      if (pinCodeSearchResult?.length > 0 && validationErrors.pinCode === '') {
+        setUserData({ ...userData, city: pinCodeSearchResult[0]?.city || pinCodeSearchResult[0]?.village, state: pinCodeSearchResult[0]?.state })
+      } else {
+        setUserData({ ...userData, city: '', state: '' })
+      }
+      setPinCodeSearchResult(pinCodeSearchResult)
     }
     if (field === 'adhaarFront' || field === 'adhaarBack' || field === 'collegeIdPhoto') {
       setUserPhotoes({ ...userPhotoes, [field]: value });
@@ -77,14 +80,14 @@ const RegistrationForm = () => {
     // Validate on input change
     setValidationErrors({ ...validationErrors, [field]: validateField(field, value) });
   };
-
-  useEffect(() => {
+  useEffect(()=>{
     if (pinCodeSearchResult?.length > 0 && validationErrors.pinCode === '') {
       setUserData({ ...userData, city: pinCodeSearchResult[0]?.city || pinCodeSearchResult[0]?.village, state: pinCodeSearchResult[0]?.state })
     } else {
       setUserData({ ...userData, city: '', state: '' })
     }
-  }, [pinCodeSearchResult])
+    setPinCodeSearchResult(pinCodeSearchResult)
+  },[pinCodeSearchResult])
 
   useEffect(() => {
     if (state?.emailUid) {
@@ -119,7 +122,7 @@ const RegistrationForm = () => {
     if (isFormValid()) {
       try {
         setUserData({ ...userData, isUserRegistered: true })
-        await setDoc(doc(firebaseDb, "Users", userData.emailUid), { ...userData, isUserRegistered: true });
+        await setDoc(doc(firebaseDb, "Users", userData.emailUid), { ...userData, isUserRegistered: true, dueDate:userData.checkInDate });
         setIsLoggedIn(true);
 
         navigate('/profile')
